@@ -1,11 +1,11 @@
 {
-  "name": "sendmail",
+  "name": "sendmailv2",
   "version": "0.0.2",
   "type": "flogo:activity",
-  "ref": "github.com/cpsoares93/sendmail",
+  "ref": "github.com/cpsoares93/sendmailv2",
   "title": "SendMail",
   "description": "Send mail to recipient",
-  "author": "cpsoares93>",
+  "author": "cpsoares93",
 
   "inputs":[
     {
