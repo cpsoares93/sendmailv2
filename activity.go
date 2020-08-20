@@ -42,18 +42,7 @@ func (a *sendmail) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 
-	emailtype := ctx.GetInput("type");
-
-	if(emailtype == "appointment"){
-		createAppointment(ctx)
-	}else{
-		createPrescription(ctx);
-	}
-
-	return true, nil
-}
-
-func createPrescription(ctx activity.Context){
+	//emailtype := ctx.GetInput("type");
 
 	server := ctx.GetInput("1_smtp_server").(string)
 	port := ctx.GetInput("1_smtp_port").(string)
@@ -105,6 +94,13 @@ func createPrescription(ctx activity.Context){
 			//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 		}
 	}
+
+	return true, nil
+}
+
+func createPrescription(ctx activity.Context){
+
+
 }
 
 func createAppointment(ctx activity.Context){
