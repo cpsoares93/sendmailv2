@@ -1,0 +1,153 @@
+{
+  "name": "sendmail",
+  "version": "0.0.2",
+  "type": "flogo:activity",
+  "ref": "github.com/cpsoares93/sendmail",
+  "title": "SendMail",
+  "description": "Send mail to recipient",
+  "author": "cpsoares93>",
+
+  "inputs":[
+    {
+      "name": "type",
+      "type": "string",
+      "required" : true
+    },
+	{
+      "name": "1_smtp_server",
+      "type": "string",
+      "required": true
+    },
+	{
+      "name": "1_smtp_port",
+      "type": "string",
+      "required": true
+    },
+	{
+      "name": "1_smtp_auth_email",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "1_smtp_from_email",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "1_smtp_error_endpoint",
+      "type": "string",
+      "required": true
+    },
+	{
+      "name": "1_smtp_auth_password",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "1_smtp_sender_name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "1_smtp_ssl",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "1_smtp_bcc_email",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "3_patient_contact",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "2_appointment_name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "3_patient_name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_practitioner_name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_date",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_hospital",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_meet",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_subject",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "5_template_name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "2_appointment_status",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_end_date",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "6_ics_organizer",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "6_ics_prodid",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_appointment_int_id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "7_endpoint_email_template",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "type": "string"
+    },
+	  {
+      "name": "SentTime",
+      "type": "string"
+    }
+
+  ]
+}
