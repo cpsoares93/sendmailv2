@@ -1,4 +1,4 @@
-package sendmail
+package sendmailv2
 
 import (
 	"bytes"
