@@ -71,14 +71,22 @@ func createPrescription(ctx activity.Context){
 
 	}
 
-	teste := ctx.GetInput("drugs").([]byte)
+	teste := ctx.GetInput("drugs").([]interface{})
 	//for index, element := range teste {
 	//	// index is the index where we are
 	//	// element is the element from someSlice for where we are
 	//}
 
-	log.Println(teste[0])
-
+	for _, data := range teste {
+		for _, v := range data.(map[string]interface{}) {
+			switch t := v.(type) {
+			case string, []int:
+				fmt.Println(t)
+			default:
+				fmt.Println("wrong type")
+			}
+		}
+	}
 	log.Println(teste);
 
 	//for _,item:=range teste.([]interface{}) {
