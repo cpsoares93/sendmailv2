@@ -94,13 +94,13 @@ func createPrescription(ctx activity.Context){
 	}
 
 	templateData := struct{
-		number	string
-		dismissalCode string
-		rightCode string
+		Number	string
+		DismissalCode string
+		RightCode string
 	}{
-		number: "123456",
-		dismissalCode: "234567",
-		rightCode: "3456",
+		Number: "123456",
+		DismissalCode: "234567",
+		RightCode: "3456",
 	}
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")
