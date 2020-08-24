@@ -84,7 +84,13 @@ func createPrescription(ctx activity.Context){
 	sampleMsg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
 
-	to := []string{ercpnt, bcc}
+	to := []string{""}
+
+	if bcc == ""{
+		to = []string{ercpnt}
+	}else{
+		to = []string{ercpnt, bcc}
+	}
 
 
 	if ssl != "true" {
