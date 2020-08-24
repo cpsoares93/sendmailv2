@@ -71,7 +71,7 @@ func createPrescription(ctx activity.Context){
 
 	}
 
-	teste := ctx.GetInput("drugs").([]string)
+	teste := ctx.GetInput("drugs").([][]interface{})
 	//for index, element := range teste {
 	//	// index is the index where we are
 	//	// element is the element from someSlice for where we are
