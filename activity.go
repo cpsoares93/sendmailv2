@@ -77,16 +77,13 @@ func createPrescription(ctx activity.Context){
 	//	// element is the element from someSlice for where we are
 	//}
 
-	for _, data := range teste {
-		for _, v := range data.(map[string]interface{}) {
-			switch t := v.(type) {
-			case string, []int:
-				fmt.Println(t)
-			default:
-				fmt.Println("wrong type")
-			}
-		}
+	//field := make(map[string]interface{})
+
+	for i := 0; i < len(teste); i++ {
+		fmt.Println(teste[i])
 	}
+
+
 	log.Println(teste);
 
 	//for _,item:=range teste.([]interface{}) {
