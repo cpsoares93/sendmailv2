@@ -71,19 +71,19 @@ func createPrescription(ctx activity.Context){
 
 	}
 
-	teste := ctx.GetInput("drugs")
+	teste := ctx.GetInput("drugs").([]byte)
 	//for index, element := range teste {
 	//	// index is the index where we are
 	//	// element is the element from someSlice for where we are
 	//}
 
-
+	log.Println(teste[0])
 
 	log.Println(teste);
 
-	for _,item:=range teste.([]interface{}) {
-		fmt.Printf("%v", item.([]interface{})[0])
-	}
+	//for _,item:=range teste.([]interface{}) {
+	//	fmt.Printf("%v", item.([]interface{})[0])
+	//}
 
 	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
 	option_pin := ctx.GetInput("option_pin").(string)
