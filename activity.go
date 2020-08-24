@@ -93,7 +93,16 @@ func createPrescription(ctx activity.Context){
 		to = []string{ercpnt, bcc}
 	}
 
-	templateData := NewPrescription("123456", "1", "2")
+	templateData := struct{
+		number	string
+		dismissalCode string
+		rightCode string
+	}{
+		number: "123456",
+		dismissalCode: "234567",
+		rightCode: "3456",
+	}
+
 	r := NewRequest([]string{ercpnt}, "medicação", "")
 	error1 := r.ParseTemplate(template+".html", templateData)
 	fmt.Println(error1)
