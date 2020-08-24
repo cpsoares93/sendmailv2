@@ -71,6 +71,10 @@ func createPrescription(ctx activity.Context){
 
 	}
 
+	teste := ctx.GetInput("drugs")
+
+	log.Println(teste);
+
 	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
 	option_pin := ctx.GetInput("option_pin").(string)
 

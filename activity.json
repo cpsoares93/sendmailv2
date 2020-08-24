@@ -147,6 +147,11 @@
       "name" : "option_pin",
       "type": "string",
       "required": false
+    },
+    {
+      "name" : "drugs",
+      "type" : "array",
+      "required" : false
     }
   ],
   "outputs": [
