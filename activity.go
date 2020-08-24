@@ -82,7 +82,7 @@ func createPrescription(ctx activity.Context){
 	log.Println(teste);
 
 	for _,item:=range teste.([]interface{}) {
-		fmt.Printf("%v", item.(map[string]interface{})[0])
+		fmt.Printf("%v", item.([]interface{})[0])
 	}
 
 	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
