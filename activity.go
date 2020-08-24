@@ -63,7 +63,7 @@ func createPrescription(ctx activity.Context){
 	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
 	apppass := ""
 	email_from := emailauth
-	template := ctx.GetInput("7_endpoint_email_template").(string)
+	template := ctx.GetInput("5_template_name").(string)
 
 	if ssl != "true" {
 		apppass = ctx.GetInput("1_smtp_auth_password").(string)
