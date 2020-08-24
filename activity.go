@@ -79,7 +79,7 @@ func createPrescription(ctx activity.Context){
 
 	//field := make(map[string]interface{})
 
-	for i := 0; i < len(teste); i++ {
+	for i := 0; i < len(teste[0]); i++ {
 		fmt.Println(teste[i])
 	}
 
