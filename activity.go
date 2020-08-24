@@ -71,6 +71,9 @@ func createPrescription(ctx activity.Context){
 
 	}
 
+	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
+	option_pin := ctx.GetInput("option_pin").(string)
+
 	delimeter          := "**=cuf689407924327"
 
 	ercpnt := ctx.GetInput("3_patient_contact").(string)
@@ -99,8 +102,8 @@ func createPrescription(ctx activity.Context){
 		RightCode string
 	}{
 		Number: "123456",
-		DismissalCode: "234567",
-		RightCode: "3456",
+		DismissalCode: dispensation_pin,
+		RightCode: option_pin,
 	}
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")

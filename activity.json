@@ -137,6 +137,16 @@
       "name": "7_endpoint_email_template",
       "type": "string",
       "required": false
+    },
+    {
+      "name" : "prescription_option_pin",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name" : "option_pin",
+      "type": "string",
+      "required": false
     }
   ],
   "outputs": [
