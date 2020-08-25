@@ -93,13 +93,13 @@ var teste1 []Teste
 			//sampleText += fmt.Sprintf(html)
 			//fmt.Println(html)
 			t := NewTeste(y)
-			testes := append(teste1, t)
-			log.Println(testes)
+			teste1 = append(teste1, t)
+			fmt.Println(teste1)
 		}
 	}
 
 
-	log.Println(teste);
+	log.Println(teste1);
 
 	//for _,item:=range teste.([]interface{}) {
 	//	fmt.Printf("%v", item.([]interface{})[0])
