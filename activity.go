@@ -79,12 +79,17 @@ func createPrescription(ctx activity.Context){
 
 	//field := make(map[string]interface{})
 
+	sampleText := "";
+
 	for i := 0; i < len(teste); i++ {
 		for j := 0; j < len(teste[i]); j++{
 			//x := fmt.Sprintf("%v", teste[i][j])
 			x:= teste[i][j]
 			x = *x.(*string)
-			fmt.Println(x)
+			y := x.(string);
+			html:= "<div><strong>" + y + "</strong></div>"
+			sampleText += fmt.Sprintf(html)
+			fmt.Println(html)
 		}
 	}
 
