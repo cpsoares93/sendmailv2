@@ -116,6 +116,7 @@ func createPrescription(ctx activity.Context){
 	sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 	sampleMsg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
+	sampleMsg += sampleText
 
 	to := []string{""}
 
