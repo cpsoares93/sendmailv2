@@ -116,7 +116,6 @@ func createPrescription(ctx activity.Context){
 	sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 	sampleMsg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
-	sampleMsg += sampleText
 
 	to := []string{""}
 
@@ -130,10 +129,12 @@ func createPrescription(ctx activity.Context){
 		Number	string
 		DismissalCode string
 		RightCode string
+		Text string
 	}{
 		Number: "123456",
 		DismissalCode: dispensation_pin,
 		RightCode: option_pin,
+		Text: sampleText,
 	}
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")
