@@ -79,9 +79,9 @@ func createPrescription(ctx activity.Context){
 
 	//field := make(map[string]interface{})
 
-	//sampleText := "";
 
-	teste1 := []string{""}
+	//sampleText := "";
+var teste1 []Teste
 
 	for i := 0; i < len(teste); i++ {
 		for j := 0; j < len(teste[i]); j++{
@@ -92,7 +92,9 @@ func createPrescription(ctx activity.Context){
 			//html:= "<div><strong>" + y + "</strong></div>"
 			//sampleText += fmt.Sprintf(html)
 			//fmt.Println(html)
-			teste1 = append(teste1, y)
+			t := NewTeste(y)
+			testes := append(teste1, t)
+			log.Println(testes)
 		}
 	}
 
@@ -132,7 +134,7 @@ func createPrescription(ctx activity.Context){
 		Number	string
 		DismissalCode string
 		RightCode string
-		Text []string
+		Text []Teste
 	}{
 		Number: "123456",
 		DismissalCode: dispensation_pin,
@@ -193,6 +195,15 @@ func createPrescription(ctx activity.Context){
 	//	}
 	//}
 
+}
+type Teste struct {
+	teste string
+}
+
+func NewTeste(teste string) Teste{
+	return Teste{
+		teste: teste,
+	}
 }
 
 type Prescription struct{
