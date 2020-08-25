@@ -142,6 +142,7 @@ func createPrescription(ctx activity.Context){
 	fmt.Println(error1)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
+		sampleMsg += sampleText
 
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailauth, apppass, server)
