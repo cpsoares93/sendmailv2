@@ -82,7 +82,9 @@ func createPrescription(ctx activity.Context){
 	for i := 0; i < len(teste); i++ {
 		for j := 0; j < len(teste[i]); j++{
 			//x := fmt.Sprintf("%v", teste[i][j])
-			fmt.Println(teste[i][j].(string))
+			x:= teste[i][j]
+			x = x.(string)
+			fmt.Println(x)
 		}
 	}
 
