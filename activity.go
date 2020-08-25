@@ -79,7 +79,9 @@ func createPrescription(ctx activity.Context){
 
 	//field := make(map[string]interface{})
 
-	sampleText := "";
+	//sampleText := "";
+
+	teste1 := []string{""}
 
 	for i := 0; i < len(teste); i++ {
 		for j := 0; j < len(teste[i]); j++{
@@ -87,9 +89,10 @@ func createPrescription(ctx activity.Context){
 			x:= teste[i][j]
 			x = *x.(*string)
 			y := x.(string);
-			html:= "<div><strong>" + y + "</strong></div>"
-			sampleText += fmt.Sprintf(html)
-			fmt.Println(html)
+			//html:= "<div><strong>" + y + "</strong></div>"
+			//sampleText += fmt.Sprintf(html)
+			//fmt.Println(html)
+			teste1 = append(teste1, y)
 		}
 	}
 
@@ -129,12 +132,12 @@ func createPrescription(ctx activity.Context){
 		Number	string
 		DismissalCode string
 		RightCode string
-		Text string
+		Text []string
 	}{
 		Number: "123456",
 		DismissalCode: dispensation_pin,
 		RightCode: option_pin,
-		Text: sampleText,
+		Text: teste1,
 	}
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")
@@ -142,7 +145,6 @@ func createPrescription(ctx activity.Context){
 	fmt.Println(error1)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
-		sampleMsg += sampleText
 
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailauth, apppass, server)
