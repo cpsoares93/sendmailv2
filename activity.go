@@ -140,14 +140,30 @@ func createPrescription(ctx activity.Context){
 			lowest = *lowest.(*string)
 			data.Lowest = lowest.(string)
 
+			display := prescriptionContent[i][3]
+			display = *display.(*string)
+
+			if display.(string) == "forma_farmaceutica" {
+				pharmPhorm := prescriptionContent[i][4]
+				pharmPhorm = *pharmPhorm.(*string)
+				data.Pharmform = pharmPhorm.(string)
+
+			}else if display.(string) == "embalagem"{
+				packageDrug := prescriptionContent[i][4]
+				packageDrug = *packageDrug.(*string)
+				data.Package = packageDrug.(string)
+
+			}else if display.(string) == "qtd_embalagem"{
+				packageQtd := prescriptionContent[i][4]
+				packageQtd = *packageQtd.(*string)
+				data.Dosagedrug = packageQtd.(string)
+			}
+
 			requestId = prescId.(string)
 			index = index + 1
 		}else{
 			display := prescriptionContent[i][3]
 			display = *display.(*string)
-
-			fmt.Println(display.(string))
-			fmt.Println(prescriptionContent[i][4])
 
 			if display.(string) == "forma_farmaceutica" {
 				pharmPhorm := prescriptionContent[i][4]
