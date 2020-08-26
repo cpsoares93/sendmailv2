@@ -146,6 +146,9 @@ func createPrescription(ctx activity.Context){
 			display := prescriptionContent[i][3]
 			display = *display.(*string)
 
+			fmt.Println(display.(string))
+			fmt.Println(prescriptionContent[i][4])
+
 			if display.(string) == "forma_farmaceutica" {
 				pharmPhorm := prescriptionContent[i][4]
 				pharmPhorm = *pharmPhorm.(*string)
@@ -160,6 +163,16 @@ func createPrescription(ctx activity.Context){
 				packageQtd := prescriptionContent[i][4]
 				packageQtd = *packageQtd.(*string)
 				data.Dosagedrug = packageQtd.(string)
+			}
+		}
+
+		if i == len(prescriptionContent) -1 {
+			prescRequest := NewRequest([]string{""}, "Prescription", "")
+			errorPresc := prescRequest.ParseTemplate("template-teste.html", data)
+			fmt.Println(errorPresc)
+			if errorPresc := prescRequest.ParseTemplate("template-teste.html", data); errorPresc == nil {
+				tableDrugs += prescRequest.body
+				fmt.Println(prescRequest.body)
 			}
 		}
 	}
