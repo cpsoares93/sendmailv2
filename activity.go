@@ -171,6 +171,7 @@ var teste1 []Teste
 	fmt.Println(error1)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
+		sampleMsg += stringteste
 
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailauth, apppass, server)
