@@ -88,6 +88,7 @@ func createPrescription(ctx activity.Context){
 		Quantity string
 		Lowest string
 		Expiration string
+		Instruction string
 	}{
 		Index: strconv.Itoa(index),
 		Name: "",
@@ -98,6 +99,7 @@ func createPrescription(ctx activity.Context){
 		Quantity: "",
 		Lowest: "",
 		Expiration: "",
+		Instruction: "",
 	}
 
 	for i := 0; i < len(prescriptionContent); i++ {
@@ -125,6 +127,7 @@ func createPrescription(ctx activity.Context){
 				data.Quantity = ""
 				data.Lowest = ""
 				data.Expiration = ""
+				data.Instruction = ""
 			}
 
 			drugName:= prescriptionContent[i][1]
@@ -146,6 +149,10 @@ func createPrescription(ctx activity.Context){
 			expiration := prescriptionContent[i][7]
 			expiration = *expiration.(*string)
 			data.Expiration = expiration.(string)
+
+			instruction := prescriptionContent[i][8]
+			instruction = *instruction.(*string)
+			data.Instruction = instruction.(string)
 
 			display := prescriptionContent[i][3]
 			display = *display.(*string)
