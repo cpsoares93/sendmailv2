@@ -96,10 +96,24 @@ var teste1 []Teste
 			//fmt.Println(html)
 			t := NewTeste(y)
 			teste1 = append(teste1, t)
+
 			fmt.Println(teste1)
 		}
 	}
 
+	stringteste := ""
+
+	for i:=0; i < len(teste1) ; i++{
+		f := NewRequest([]string{""}, "medicação", "")
+
+		errorf := f.ParseTemplate("template-teste.html", teste1[i])
+		fmt.Println(errorf)
+		if errorf := f.ParseTemplate(template+".html", teste1[i]); errorf == nil {
+			stringteste += f.body;
+		}
+	}
+
+	log.Println(stringteste)
 
 	log.Println(teste1);
 
@@ -145,6 +159,9 @@ var teste1 []Teste
 	}
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")
+
+
+
 	error1 := r.ParseTemplate(template+".html", templateData)
 	fmt.Println(error1)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
