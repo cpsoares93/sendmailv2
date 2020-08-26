@@ -14,7 +14,6 @@ import (
 	"net/smtp"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -86,28 +85,42 @@ var teste1 []Teste
 	stringteste := ""
 
 	for i := 0; i < len(teste); i++ {
+
+		f := NewRequest([]string{""}, "medicação", "")
+		x:= teste[i][0]
+		x = *x.(*string)
+		y := x.(string)
+
+		z:= teste[i][1]
+		z = *z.(*string)
+		v := z.(string)
+
+		data := struct {
+			teste string
+			teste1 string
+		}{
+			teste: y,
+			teste1: v,
+		}
+		errorf := f.ParseTemplate("template-teste.html", data)
+		fmt.Println(errorf)
+		if errorf := f.ParseTemplate("template-teste.html", data); errorf == nil {
+			stringteste += f.body;
+			fmt.Println(f.body)
+		}
+
 		for j := 0; j < len(teste[i]); j++{
 			//x := fmt.Sprintf("%v", teste[i][j])
-			x:= teste[i][j]
-			x = *x.(*string)
-			y := x.(string)
-			y = strings.ReplaceAll(y, "{", "")
 
-			f := NewRequest([]string{""}, "medicação", "")
 
-			errorf := f.ParseTemplate("template-teste.html", y)
-			fmt.Println(errorf)
-			if errorf := f.ParseTemplate("template-teste.html", y); errorf == nil {
-				stringteste += f.body;
-				fmt.Println(f.body)
-			}
+
 			//html:= "<div><strong>" + y + "</strong></div>"
 			//sampleText += fmt.Sprintf(html)
 			//fmt.Println(html)
-			t := NewTeste(y)
-			teste1 = append(teste1, t)
-
-			fmt.Println(teste1)
+			//t := NewTeste(y)
+			//teste1 = append(teste1, t)
+			//
+			//fmt.Println(teste1)
 		}
 	}
 
