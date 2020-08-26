@@ -92,18 +92,20 @@ var teste1 []Teste
 
 		if(id1.(string) != id){
 			f := NewRequest([]string{""}, "medicação", "")
-			x:= teste[i][0]
+			x:= teste[i][1]
 			x = *x.(*string)
 			y := x.(string)
 
-			z:= teste[i][1]
+			z:= teste[i][2]
 			z = *z.(*string)
 			v := z.(string)
 
 			data := struct {
+				Index string
 				Teste string
 				Teste1 string
 			}{
+				Index: strconv.Itoa(i),
 				Teste: y,
 				Teste1: v,
 			}
