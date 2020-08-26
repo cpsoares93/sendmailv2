@@ -81,11 +81,25 @@ func createPrescription(ctx activity.Context){
 
 
 	//sampleText := "";
-var teste1 []Teste
 	stringteste := ""
 
 	id := ""
-	index := 0
+	index := 1
+
+	data := struct {
+		Index string
+		Name string
+		Dosage string
+		Pharmform string
+		Package string
+		Dosagedrug string
+		Quantity string
+		Lowest string
+	}{
+		Index: strconv.Itoa(index),
+		Name: "",
+		Lowest: "",
+	}
 
 	for i := 0; i < len(teste); i++ {
 		id1 := teste[i][0]
@@ -95,21 +109,13 @@ var teste1 []Teste
 			f := NewRequest([]string{""}, "medicação", "")
 			x:= teste[i][1]
 			x = *x.(*string)
-			y := x.(string)
+			data.Name = x.(string)
 
 			z:= teste[i][2]
 			z = *z.(*string)
-			v := z.(string)
+			data.Lowest = z.(string)
 
-			data := struct {
-				Index string
-				Teste string
-				Teste1 string
-			}{
-				Index: strconv.Itoa(index),
-				Teste: y,
-				Teste1: v,
-			}
+
 			errorf := f.ParseTemplate("template-teste.html", data)
 			fmt.Println(errorf)
 			if errorf := f.ParseTemplate("template-teste.html", data); errorf == nil {
@@ -125,8 +131,6 @@ var teste1 []Teste
 
 	fmt.Println("string");
 	fmt.Println(stringteste)
-
-	log.Println(teste1);
 
 	//for _,item:=range teste.([]interface{}) {
 	//	fmt.Printf("%v", item.([]interface{})[0])
