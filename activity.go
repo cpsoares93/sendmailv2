@@ -83,6 +83,7 @@ func createPrescription(ctx activity.Context){
 
 	//sampleText := "";
 var teste1 []Teste
+	stringteste := ""
 
 	for i := 0; i < len(teste); i++ {
 		for j := 0; j < len(teste[i]); j++{
@@ -91,6 +92,15 @@ var teste1 []Teste
 			x = *x.(*string)
 			y := x.(string)
 			y = strings.ReplaceAll(y, "{", "")
+
+			f := NewRequest([]string{""}, "medicação", "")
+
+			errorf := f.ParseTemplate("template-teste.html", y)
+			fmt.Println(errorf)
+			if errorf := f.ParseTemplate(template+".html", teste1[i]); errorf == nil {
+				stringteste += f.body;
+				fmt.Println(f.body)
+			}
 			//html:= "<div><strong>" + y + "</strong></div>"
 			//sampleText += fmt.Sprintf(html)
 			//fmt.Println(html)
@@ -101,16 +111,10 @@ var teste1 []Teste
 		}
 	}
 
-	stringteste := ""
 
 	for i:=0; i < len(teste1) ; i++{
-		f := NewRequest([]string{""}, "medicação", "")
 
-		errorf := f.ParseTemplate("template-teste.html", teste1[i])
-		fmt.Println(errorf)
-		if errorf := f.ParseTemplate(template+".html", teste1[i]); errorf == nil {
-			stringteste += f.body;
-		}
+
 	}
 
 	fmt.Println("string");
