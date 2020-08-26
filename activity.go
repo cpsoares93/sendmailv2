@@ -106,7 +106,7 @@ func createPrescription(ctx activity.Context){
 
 			prescRequest := NewRequest([]string{""}, "Prescription", "")
 
-			if requestId == ""{
+			if requestId != ""{
 				errorPresc := prescRequest.ParseTemplate("template-prescriptionContent.html", data)
 				fmt.Println(errorPresc)
 				if errorPresc := prescRequest.ParseTemplate("template-prescriptionContent.html", data); errorPresc == nil {
