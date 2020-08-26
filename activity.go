@@ -165,12 +165,10 @@ func createPrescription(ctx activity.Context){
 		Number	string
 		DismissalCode string
 		RightCode string
-		Text []Teste
 	}{
 		Number: "123456",
 		DismissalCode: dispensation_pin,
 		RightCode: option_pin,
-		Text: teste1,
 	}
 
 	//header := ""
