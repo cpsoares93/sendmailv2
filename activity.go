@@ -85,6 +85,7 @@ var teste1 []Teste
 	stringteste := ""
 
 	id := ""
+	index := 0
 
 	for i := 0; i < len(teste); i++ {
 		id1 := teste[i][0]
@@ -105,7 +106,7 @@ var teste1 []Teste
 				Teste string
 				Teste1 string
 			}{
-				Index: strconv.Itoa(i),
+				Index: strconv.Itoa(index),
 				Teste: y,
 				Teste1: v,
 			}
@@ -117,6 +118,7 @@ var teste1 []Teste
 			}
 
 			id = id1.(string)
+			index = index + 1
 		}
 	}
 
