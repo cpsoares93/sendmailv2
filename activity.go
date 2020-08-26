@@ -220,7 +220,7 @@ func createPrescription(ctx activity.Context){
 
 	sampleMsg := fmt.Sprintf("From: %s\r\n", from)
 	sampleMsg += fmt.Sprintf("To: %s\r\n", ercpnt)
-	sampleMsg += "Subject: " + "prescriptionContent" + "\r\n"
+	sampleMsg += "Subject: " + "Prescrição Eletrónica Médica" + "\r\n"
 	sampleMsg += "MIME-Version: 1.0\r\n"
 	sampleMsg += fmt.Sprintf("Content-Type: multipart/mixed; boundary=\"%s\"\r\n", delimeter)
 	sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
