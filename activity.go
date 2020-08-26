@@ -57,33 +57,25 @@ func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 func createPrescription(ctx activity.Context){
 	server := ctx.GetInput("1_smtp_server").(string)
 	port := ctx.GetInput("1_smtp_port").(string)
-	emailauth := ctx.GetInput("1_smtp_auth_email").(string)
-	from_name := ctx.GetInput("1_smtp_sender_name").(string)
+	emailAuth := ctx.GetInput("1_smtp_auth_email").(string)
+	fromName := ctx.GetInput("1_smtp_sender_name").(string)
 	ssl := ctx.GetInput("1_smtp_ssl").(string)
 	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
 	apppass := ""
-	email_from := emailauth
+	emailFrom := emailAuth
 	//template := ctx.GetInput("5_template_name").(string)
 
 	if ssl != "true" {
 		apppass = ctx.GetInput("1_smtp_auth_password").(string)
-		email_from = ctx.GetInput("1_smtp_from_email").(string)
+		emailFrom = ctx.GetInput("1_smtp_from_email").(string)
 
 	}
 
-	teste := ctx.GetInput("drugs").([][]interface{})
-	//for index, element := range teste {
-	//	// index is the index where we are
-	//	// element is the element from someSlice for where we are
-	//}
+	prescriptionContent := ctx.GetInput("drugs").([][]interface{})
 
-	//field := make(map[string]interface{})
+	tableDrugs := ""
 
-
-	//sampleText := "";
-	stringteste := ""
-
-	id := ""
+	requestId := ""
 	index := 1
 
 	data := struct {
@@ -98,43 +90,79 @@ func createPrescription(ctx activity.Context){
 	}{
 		Index: strconv.Itoa(index),
 		Name: "",
+		Dosage: "",
+		Pharmform: "",
+		Package: "",
+		Dosagedrug: "",
+		Quantity: "",
 		Lowest: "",
 	}
 
-	for i := 0; i < len(teste); i++ {
-		id1 := teste[i][0]
-		id1 = *id1.(*string)
+	for i := 0; i < len(prescriptionContent); i++ {
+		prescId := prescriptionContent[i][0]
+		prescId = *prescId.(*string)
 
-		if(id1.(string) != id){
-			f := NewRequest([]string{""}, "medicação", "")
-			x:= teste[i][1]
-			x = *x.(*string)
-			data.Name = x.(string)
+		if prescId.(string) != requestId {
 
-			z:= teste[i][2]
-			z = *z.(*string)
-			data.Lowest = z.(string)
+			prescRequest := NewRequest([]string{""}, "Prescription", "")
 
+			if requestId == ""{
+				errorPresc := prescRequest.ParseTemplate("template-prescriptionContent.html", data)
+				fmt.Println(errorPresc)
+				if errorPresc := prescRequest.ParseTemplate("template-prescriptionContent.html", data); errorPresc == nil {
+					tableDrugs += prescRequest.body
+					fmt.Println(prescRequest.body)
+				}
 
-			errorf := f.ParseTemplate("template-teste.html", data)
-			fmt.Println(errorf)
-			if errorf := f.ParseTemplate("template-teste.html", data); errorf == nil {
-				stringteste += f.body;
-				fmt.Println(f.body)
+				data.Name = ""
+				data.Dosagedrug = ""
+				data.Index = strconv.Itoa(index)
+				data.Dosage = ""
+				data.Pharmform = ""
+				data.Package = ""
+				data.Quantity = ""
+				data.Lowest = ""
 			}
 
-			id = id1.(string)
+			drugName:= prescriptionContent[i][1]
+			drugName = *drugName.(*string)
+			data.Name = drugName.(string)
+
+			drugDosage:= prescriptionContent[i][2]
+			drugDosage = *drugDosage.(*string)
+			data.Dosage = drugDosage.(string)
+
+			quantity:= prescriptionContent[i][5]
+			quantity = *quantity.(*string)
+			data.Quantity = quantity.(string)
+
+			lowest := prescriptionContent[i][6]
+			lowest = *lowest.(*string)
+			data.Lowest = lowest.(string)
+
+			requestId = prescId.(string)
 			index = index + 1
+		}else{
+			display := prescriptionContent[i][3]
+			display = *display.(*string)
+
+			if display.(string) == "forma_farmaceutica" {
+				pharmPhorm := prescriptionContent[i][4]
+				pharmPhorm = *pharmPhorm.(*string)
+				data.Pharmform = pharmPhorm.(string)
+
+			}else if display.(string) == "embalagem"{
+				packageDrug := prescriptionContent[i][4]
+				packageDrug = *packageDrug.(*string)
+				data.Package = packageDrug.(string)
+
+			}else if display.(string) == "qtd_embalagem"{
+				packageQtd := prescriptionContent[i][4]
+				packageQtd = *packageQtd.(*string)
+				data.Dosagedrug = packageQtd.(string)
+			}
 		}
 	}
-
-
-	fmt.Println("string");
-	fmt.Println(stringteste)
-
-	//for _,item:=range teste.([]interface{}) {
-	//	fmt.Printf("%v", item.([]interface{})[0])
-	//}
 
 	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
 	option_pin := ctx.GetInput("option_pin").(string)
@@ -142,11 +170,11 @@ func createPrescription(ctx activity.Context){
 	delimeter          := "**=cuf689407924327"
 
 	ercpnt := ctx.GetInput("3_patient_contact").(string)
-	from := from_name + " <" + email_from + ">";
+	from := fromName + " <" + emailFrom + ">";
 
 	sampleMsg := fmt.Sprintf("From: %s\r\n", from)
 	sampleMsg += fmt.Sprintf("To: %s\r\n", ercpnt)
-	sampleMsg += "Subject: " + "teste" + "\r\n"
+	sampleMsg += "Subject: " + "prescriptionContent" + "\r\n"
 	sampleMsg += "MIME-Version: 1.0\r\n"
 	sampleMsg += fmt.Sprintf("Content-Type: multipart/mixed; boundary=\"%s\"\r\n", delimeter)
 	sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
@@ -197,12 +225,12 @@ func createPrescription(ctx activity.Context){
 	if error1 := r.ParseTemplate("template-header.html", templateData); error1 == nil {
 
 		sampleMsg += r.body
-		sampleMsg += stringteste
+		sampleMsg += tableDrugs
 		sampleMsg += footer
 
 		if ssl != "true" {
-			auth := smtp.PlainAuth("", emailauth, apppass, server)
-			err := smtp.SendMail(server+":"+port, auth, email_from, to, []byte(sampleMsg))
+			auth := smtp.PlainAuth("", emailAuth, apppass, server)
+			err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
 				//handleError(endpoint, appointment_int_id)
@@ -210,7 +238,7 @@ func createPrescription(ctx activity.Context){
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}else{
-			err := smtp.SendMail(server+":"+port, nil, email_from, to, []byte(sampleMsg))
+			err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
 				//handleError(endpoint, appointment_int_id)
@@ -229,8 +257,8 @@ func createPrescription(ctx activity.Context){
 
 
 	//if ssl != "true" {
-	//	auth := smtp.PlainAuth("", emailauth, apppass, server)
-	//	err := smtp.SendMail(server+":"+port, auth, email_from, to, []byte(sampleMsg))
+	//	auth := smtp.PlainAuth("", emailAuth, apppass, server)
+	//	err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
 	//	if(err != nil){
 	//		fmt.Println(err)
 	//		//handleError(endpoint, appointment_int_id)
@@ -238,7 +266,7 @@ func createPrescription(ctx activity.Context){
 	//		//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 	//	}
 	//}else{
-	//	err := smtp.SendMail(server+":"+port, nil, email_from, to, []byte(sampleMsg))
+	//	err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
 	//	if(err != nil){
 	//		fmt.Println(err)
 	//		//handleError(endpoint, appointment_int_id)
