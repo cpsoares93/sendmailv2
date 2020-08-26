@@ -14,6 +14,7 @@ import (
 	"net/smtp"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -88,7 +89,8 @@ var teste1 []Teste
 			//x := fmt.Sprintf("%v", teste[i][j])
 			x:= teste[i][j]
 			x = *x.(*string)
-			y := x.(string);
+			y := x.(string)
+			y = strings.ReplaceAll(y, "{", "")
 			//html:= "<div><strong>" + y + "</strong></div>"
 			//sampleText += fmt.Sprintf(html)
 			//fmt.Println(html)
