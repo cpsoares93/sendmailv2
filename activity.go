@@ -97,7 +97,7 @@ var teste1 []Teste
 
 			errorf := f.ParseTemplate("template-teste.html", y)
 			fmt.Println(errorf)
-			if errorf := f.ParseTemplate(template+".html", y); errorf == nil {
+			if errorf := f.ParseTemplate("template-teste.html", y); errorf == nil {
 				stringteste += f.body;
 				fmt.Println(f.body)
 			}
