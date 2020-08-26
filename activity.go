@@ -176,15 +176,34 @@ var teste1 []Teste
 		Text: teste1,
 	}
 
+	//header := ""
+	//h := NewRequest([]string{ercpnt}, "medicação", "")
+	//errorx := h.ParseTemplate("template-header.html", templateData)
+	//fmt.Println(errorx)
+	//if errorx := h.ParseTemplate(template+".html", templateData); errorx == nil {
+	//	header = h.body;
+	//}
+
+	footer := ""
+	fo := NewRequest([]string{ercpnt}, "medicação", "")
+	errory := fo.ParseTemplate("template-footer.html", templateData)
+	fmt.Println(errory)
+	if errory := fo.ParseTemplate("template-footer.html", templateData); errory == nil {
+		footer = fo.body;
+	}
+
+
 	r := NewRequest([]string{ercpnt}, "medicação", "")
 
 
 
-	error1 := r.ParseTemplate(template+".html", templateData)
+	error1 := r.ParseTemplate("template-header.html", templateData)
 	fmt.Println(error1)
-	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
+	if error1 := r.ParseTemplate("template-header.html", templateData); error1 == nil {
+
 		sampleMsg += r.body
 		sampleMsg += stringteste
+		sampleMsg += footer
 
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailauth, apppass, server)
