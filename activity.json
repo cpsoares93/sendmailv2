@@ -152,6 +152,16 @@
       "name" : "drugs",
       "type" : "array",
       "required" : false
+    },
+    {
+      "name" : "expiration_date",
+      "type" : "string",
+      "required" : false
+    },
+    {
+      "name" : "prescription_id",
+      "type" : "string",
+      "required" : false
     }
   ],
   "outputs": [

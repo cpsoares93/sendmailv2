@@ -87,6 +87,7 @@ func createPrescription(ctx activity.Context){
 		Dosagedrug string
 		Quantity string
 		Lowest string
+		Expiration string
 	}{
 		Index: strconv.Itoa(index),
 		Name: "",
@@ -96,6 +97,7 @@ func createPrescription(ctx activity.Context){
 		Dosagedrug: "",
 		Quantity: "",
 		Lowest: "",
+		Expiration: "",
 	}
 
 	for i := 0; i < len(prescriptionContent); i++ {
@@ -122,6 +124,7 @@ func createPrescription(ctx activity.Context){
 				data.Package = ""
 				data.Quantity = ""
 				data.Lowest = ""
+				data.Expiration = ""
 			}
 
 			drugName:= prescriptionContent[i][1]
@@ -140,8 +143,15 @@ func createPrescription(ctx activity.Context){
 			lowest = *lowest.(*string)
 			data.Lowest = lowest.(string)
 
+			expiration := prescriptionContent[i][7]
+			expiration = *expiration.(*string)
+
 			display := prescriptionContent[i][3]
 			display = *display.(*string)
+
+
+
+
 
 			if display.(string) == "forma_farmaceutica" {
 				pharmPhorm := prescriptionContent[i][4]
@@ -195,6 +205,8 @@ func createPrescription(ctx activity.Context){
 
 	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
 	option_pin := ctx.GetInput("option_pin").(string)
+	expirationDate := ctx.GetInput("expiration_date").(string)
+	prescriptionIdTransf := ctx.GetInput("prescription_id").(string)
 
 	delimeter          := "**=cuf689407924327"
 
@@ -222,10 +234,12 @@ func createPrescription(ctx activity.Context){
 		Number	string
 		DismissalCode string
 		RightCode string
+		Date string
 	}{
-		Number: "123456",
+		Number: prescriptionIdTransf,
 		DismissalCode: dispensation_pin,
 		RightCode: option_pin,
+		Date: expirationDate,
 	}
 
 	//header := ""
