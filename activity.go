@@ -145,12 +145,10 @@ func createPrescription(ctx activity.Context){
 
 			expiration := prescriptionContent[i][7]
 			expiration = *expiration.(*string)
+			data.Expiration = expiration.(string)
 
 			display := prescriptionContent[i][3]
 			display = *display.(*string)
-
-
-
 
 
 			if display.(string) == "forma_farmaceutica" {
