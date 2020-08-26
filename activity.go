@@ -96,11 +96,11 @@ var teste1 []Teste
 		v := z.(string)
 
 		data := struct {
-			teste string
-			teste1 string
+			Teste string
+			Teste1 string
 		}{
-			teste: y,
-			teste1: v,
+			Teste: y,
+			Teste1: v,
 		}
 		errorf := f.ParseTemplate("template-teste.html", data)
 		fmt.Println(errorf)
