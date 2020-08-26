@@ -113,7 +113,8 @@ var teste1 []Teste
 		}
 	}
 
-	log.Println(stringteste)
+	fmt.Println("string");
+	fmt.Println(stringteste)
 
 	log.Println(teste1);
 
