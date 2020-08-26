@@ -166,16 +166,12 @@
   ],
   "outputs": [
     {
-      "name": "output",
-      "type": "string"
-    },
-	  {
-      "name": "SentTime",
-      "type": "string"
-    },
-    {
       "name" : "email",
       "type" : "string"
+    },
+    {
+      "name" : "sent",
+      "type" : "bool"
     }
 
   ]

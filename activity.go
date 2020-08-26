@@ -42,22 +42,21 @@ func (a *sendmail) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 
-	output := ""
-	fmt.Println(output)
 	emailType := ctx.GetInput("type")
 
 	if emailType == "appointment"{
 		createAppointment(ctx)
 	}else{
-		output:= createPrescription(ctx)
+		output, success := createPrescription(ctx)
 		ctx.SetOutput("email", output)
-		fmt.Println(output)
+		ctx.SetOutput("sent", success)
+
 	}
 
 	return true, nil
 }
 
-func createPrescription(ctx activity.Context) string{
+func createPrescription(ctx activity.Context) (email string, success bool){
 	output := ""
 
 	server := ctx.GetInput("1_smtp_server").(string)
@@ -275,6 +274,7 @@ func createPrescription(ctx activity.Context) string{
 				//handleError(endpoint, appointment_int_id)
 			}else{
 				output = sampleMsg
+				success = true
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}else{
@@ -283,6 +283,8 @@ func createPrescription(ctx activity.Context) string{
 				fmt.Println(err)
 				//handleError(endpoint, appointment_int_id)
 			}else{
+				output = sampleMsg
+				success = true
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}
@@ -312,7 +314,7 @@ func createPrescription(ctx activity.Context) string{
 	//	}
 	//}
 
-return output
+return output, success
 }
 type Teste struct {
 	teste string
