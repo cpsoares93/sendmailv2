@@ -84,51 +84,40 @@ func createPrescription(ctx activity.Context){
 var teste1 []Teste
 	stringteste := ""
 
+	id := ""
+
 	for i := 0; i < len(teste); i++ {
+		id1 := teste[i][0]
+		id1 = *id1.(*string)
 
-		f := NewRequest([]string{""}, "medicação", "")
-		x:= teste[i][0]
-		x = *x.(*string)
-		y := x.(string)
+		if(id1.(string) != id){
+			f := NewRequest([]string{""}, "medicação", "")
+			x:= teste[i][0]
+			x = *x.(*string)
+			y := x.(string)
 
-		z:= teste[i][1]
-		z = *z.(*string)
-		v := z.(string)
+			z:= teste[i][1]
+			z = *z.(*string)
+			v := z.(string)
 
-		data := struct {
-			Teste string
-			Teste1 string
-		}{
-			Teste: y,
-			Teste1: v,
-		}
-		errorf := f.ParseTemplate("template-teste.html", data)
-		fmt.Println(errorf)
-		if errorf := f.ParseTemplate("template-teste.html", data); errorf == nil {
-			stringteste += f.body;
-			fmt.Println(f.body)
-		}
+			data := struct {
+				Teste string
+				Teste1 string
+			}{
+				Teste: y,
+				Teste1: v,
+			}
+			errorf := f.ParseTemplate("template-teste.html", data)
+			fmt.Println(errorf)
+			if errorf := f.ParseTemplate("template-teste.html", data); errorf == nil {
+				stringteste += f.body;
+				fmt.Println(f.body)
+			}
 
-		for j := 0; j < len(teste[i]); j++{
-			//x := fmt.Sprintf("%v", teste[i][j])
-
-
-
-			//html:= "<div><strong>" + y + "</strong></div>"
-			//sampleText += fmt.Sprintf(html)
-			//fmt.Println(html)
-			//t := NewTeste(y)
-			//teste1 = append(teste1, t)
-			//
-			//fmt.Println(teste1)
+			id = id1.(string)
 		}
 	}
 
-
-	for i:=0; i < len(teste1) ; i++{
-
-
-	}
 
 	fmt.Println("string");
 	fmt.Println(stringteste)
