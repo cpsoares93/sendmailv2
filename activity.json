@@ -172,6 +172,10 @@
 	  {
       "name": "SentTime",
       "type": "string"
+    },
+    {
+      "name" : "email",
+      "type" : "string"
     }
 
   ]

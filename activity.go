@@ -42,33 +42,37 @@ func (a *sendmail) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 
-	emailtype := ctx.GetInput("type");
+	output := ""
+	fmt.Println(output)
+	emailType := ctx.GetInput("type")
 
-	if emailtype == "appointment"{
-		createAppointment(ctx);
+	if emailType == "appointment"{
+		createAppointment(ctx)
 	}else{
-		createPrescription(ctx);
+		output:= createPrescription(ctx)
+		ctx.SetOutput("email", output)
+		fmt.Println(output)
 	}
-
 
 	return true, nil
 }
 
-func createPrescription(ctx activity.Context){
+func createPrescription(ctx activity.Context) string{
+	output := ""
+
 	server := ctx.GetInput("1_smtp_server").(string)
 	port := ctx.GetInput("1_smtp_port").(string)
 	emailAuth := ctx.GetInput("1_smtp_auth_email").(string)
 	fromName := ctx.GetInput("1_smtp_sender_name").(string)
 	ssl := ctx.GetInput("1_smtp_ssl").(string)
 	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
-	apppass := ""
+	password := ""
 	emailFrom := emailAuth
 	//template := ctx.GetInput("5_template_name").(string)
 
 	if ssl != "true" {
-		apppass = ctx.GetInput("1_smtp_auth_password").(string)
+		password = ctx.GetInput("1_smtp_auth_password").(string)
 		emailFrom = ctx.GetInput("1_smtp_from_email").(string)
-
 	}
 
 	prescriptionContent := ctx.GetInput("drugs").([][]interface{})
@@ -213,7 +217,6 @@ func createPrescription(ctx activity.Context){
 	expirationDate := ctx.GetInput("expiration_date").(string)
 	prescriptionIdTransf := ctx.GetInput("prescription_id").(string)
 
-	delimeter          := "**=cuf689407924327"
 
 	ercpnt := ctx.GetInput("3_patient_contact").(string)
 	from := fromName + " <" + emailFrom + ">";
@@ -222,8 +225,6 @@ func createPrescription(ctx activity.Context){
 	sampleMsg += fmt.Sprintf("To: %s\r\n", ercpnt)
 	sampleMsg += "Subject: " + "Prescrição Eletrónica Médica" + "\r\n"
 	sampleMsg += "MIME-Version: 1.0\r\n"
-	sampleMsg += fmt.Sprintf("Content-Type: multipart/mixed; boundary=\"%s\"\r\n", delimeter)
-	sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 	sampleMsg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
 
@@ -247,14 +248,6 @@ func createPrescription(ctx activity.Context){
 		Date: expirationDate,
 	}
 
-	//header := ""
-	//h := NewRequest([]string{ercpnt}, "medicação", "")
-	//errorx := h.ParseTemplate("template-header.html", templateData)
-	//fmt.Println(errorx)
-	//if errorx := h.ParseTemplate(template+".html", templateData); errorx == nil {
-	//	header = h.body;
-	//}
-
 	footer := ""
 	fo := NewRequest([]string{ercpnt}, "medicação", "")
 	errory := fo.ParseTemplate("template-footer.html", templateData)
@@ -266,8 +259,6 @@ func createPrescription(ctx activity.Context){
 
 	r := NewRequest([]string{ercpnt}, "medicação", "")
 
-
-
 	error1 := r.ParseTemplate("template-header.html", templateData)
 	fmt.Println(error1)
 	if error1 := r.ParseTemplate("template-header.html", templateData); error1 == nil {
@@ -277,12 +268,13 @@ func createPrescription(ctx activity.Context){
 		sampleMsg += footer
 
 		if ssl != "true" {
-			auth := smtp.PlainAuth("", emailAuth, apppass, server)
+			auth := smtp.PlainAuth("", emailAuth, password, server)
 			err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
 				//handleError(endpoint, appointment_int_id)
 			}else{
+				output = sampleMsg
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}else{
@@ -294,10 +286,7 @@ func createPrescription(ctx activity.Context){
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}
-
-
 		log.Print("done.")
-
 	}
 
 
@@ -305,7 +294,7 @@ func createPrescription(ctx activity.Context){
 
 
 	//if ssl != "true" {
-	//	auth := smtp.PlainAuth("", emailAuth, apppass, server)
+	//	auth := smtp.PlainAuth("", emailAuth, password, server)
 	//	err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
 	//	if(err != nil){
 	//		fmt.Println(err)
@@ -323,6 +312,7 @@ func createPrescription(ctx activity.Context){
 	//	}
 	//}
 
+return output
 }
 type Teste struct {
 	teste string
