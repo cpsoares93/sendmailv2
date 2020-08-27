@@ -42,7 +42,7 @@ func (a *sendmail) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 
-	emailType := ctx.GetInput("type")
+	emailType := ctx.GetInput("1_a_type")
 
 	if emailType == "appointment"{
 		createAppointment(ctx)
@@ -59,24 +59,28 @@ func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 func createPrescription(ctx activity.Context) (email string, success bool){
 	output := ""
 
-	server := ctx.GetInput("1_smtp_server").(string)
-	port := ctx.GetInput("1_smtp_port").(string)
-	emailAuth := ctx.GetInput("1_smtp_auth_email").(string)
-	fromName := ctx.GetInput("1_smtp_sender_name").(string)
-	ssl := ctx.GetInput("1_smtp_ssl").(string)
-	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
+	server := ctx.GetInput("1_b_smtp_server").(string)
+	port := ctx.GetInput("1_c_smtp_port").(string)
+	emailAuth := ctx.GetInput("1_e_smtp_auth_email").(string)
+	fromName := ctx.GetInput("1_g_smtp_sender_name").(string)
+	ssl := ctx.GetInput("1_d_smtp_ssl").(string)
+	bcc := ctx.GetInput("1_i_smtp_bcc_email").(string)
 	password := ""
 	emailFrom := emailAuth
-	endpoint := ctx.GetInput("1_smtp_error_endpoint").(string)
+	endpoint := ctx.GetInput("1_j_smtp_error_endpoint").(string)
+	iterateTemplate := ctx.GetInput("5_h_prescription_template_drugs").(string)
+	footerTemplate := ctx.GetInput("5_i_template_footer").(string)
+	contentTemplate := ctx.GetInput("5_g_prescription_template_content").(string)
 
-	//template := ctx.GetInput("5_template_name").(string)
 
 	if ssl != "true" {
-		password = ctx.GetInput("1_smtp_auth_password").(string)
-		emailFrom = ctx.GetInput("1_smtp_from_email").(string)
+		password = ctx.GetInput("1_f_smtp_auth_password").(string)
+		emailFrom = ctx.GetInput("1_h_smtp_from_email").(string)
 	}
 
-	prescriptionContent := ctx.GetInput("drugs").([][]interface{})
+	prescriptionContent := ctx.GetInput("5_f_prescription_drugs").([][]interface{})
+
+	subject := ctx.GetInput("1_l_subject").(string)
 
 	tableDrugs := ""
 
@@ -116,9 +120,9 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			prescRequest := NewRequest([]string{""}, "Prescription", "")
 
 			if requestId != ""{
-				errorPresc := prescRequest.ParseTemplate("template-teste.html", data)
+				errorPresc := prescRequest.ParseTemplate(iterateTemplate + ".html", data)
 				fmt.Println(errorPresc)
-				if errorPresc := prescRequest.ParseTemplate("template-teste.html", data); errorPresc == nil {
+				if errorPresc := prescRequest.ParseTemplate(iterateTemplate + ".html", data); errorPresc == nil {
 					tableDrugs += prescRequest.body
 					fmt.Println(prescRequest.body)
 				}
@@ -135,97 +139,66 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 				data.Instruction = ""
 			}
 
-			drugName:= prescriptionContent[i][1]
-			drugName = *drugName.(*string)
-			data.Name = drugName.(string)
+			data.Name = convertToString(prescriptionContent[i][1])
 
-			drugDosage:= prescriptionContent[i][2]
-			drugDosage = *drugDosage.(*string)
-			data.Dosage = drugDosage.(string)
+			data.Dosage = convertToString(prescriptionContent[i][2])
 
-			quantity:= prescriptionContent[i][5]
-			quantity = *quantity.(*string)
-			data.Quantity = quantity.(string)
+			data.Quantity = convertToString(prescriptionContent[i][5])
 
-			lowest := prescriptionContent[i][6]
-			lowest = *lowest.(*string)
-			data.Lowest = lowest.(string)
+			data.Lowest = convertToString(prescriptionContent[i][6])
 
-			expiration := prescriptionContent[i][7]
-			expiration = *expiration.(*string)
-			data.Expiration = expiration.(string)
+			data.Expiration = convertToString(prescriptionContent[i][7])
 
-			instruction := prescriptionContent[i][8]
-			instruction = *instruction.(*string)
-			data.Instruction = instruction.(string)
+			data.Instruction = convertToString(prescriptionContent[i][8])
 
-			display := prescriptionContent[i][3]
-			display = *display.(*string)
+			if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
+				data.Pharmform = convertToString(prescriptionContent[i][4])
 
+			}else if convertToString(prescriptionContent[i][3]) == "embalagem"{
+				data.Package = convertToString(prescriptionContent[i][4])
 
-			if display.(string) == "forma_farmaceutica" {
-				pharmPhorm := prescriptionContent[i][4]
-				pharmPhorm = *pharmPhorm.(*string)
-				data.Pharmform = pharmPhorm.(string)
-
-			}else if display.(string) == "embalagem"{
-				packageDrug := prescriptionContent[i][4]
-				packageDrug = *packageDrug.(*string)
-				data.Package = packageDrug.(string)
-
-			}else if display.(string) == "qtd_embalagem"{
-				packageQtd := prescriptionContent[i][4]
-				packageQtd = *packageQtd.(*string)
-				data.Dosagedrug = packageQtd.(string)
+			}else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem"{
+				data.Dosagedrug = convertToString(prescriptionContent[i][4])
 			}
 
 			requestId = prescId.(string)
 			index = index + 1
 		}else{
-			display := prescriptionContent[i][3]
-			display = *display.(*string)
+			if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
+				data.Pharmform = convertToString(prescriptionContent[i][4])
 
-			if display.(string) == "forma_farmaceutica" {
-				pharmPhorm := prescriptionContent[i][4]
-				pharmPhorm = *pharmPhorm.(*string)
-				data.Pharmform = pharmPhorm.(string)
+			}else if convertToString(prescriptionContent[i][3]) == "embalagem"{
+				data.Package = convertToString(prescriptionContent[i][4])
 
-			}else if display.(string) == "embalagem"{
-				packageDrug := prescriptionContent[i][4]
-				packageDrug = *packageDrug.(*string)
-				data.Package = packageDrug.(string)
-
-			}else if display.(string) == "qtd_embalagem"{
-				packageQtd := prescriptionContent[i][4]
-				packageQtd = *packageQtd.(*string)
-				data.Dosagedrug = packageQtd.(string)
+			}else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem"{
+				data.Dosagedrug = convertToString(prescriptionContent[i][4])
 			}
 		}
 
 		if i == len(prescriptionContent) -1 {
-			prescRequest := NewRequest([]string{""}, "Prescription", "")
-			errorPresc := prescRequest.ParseTemplate("template-teste.html", data)
+			prescRequest := NewRequest([]string{""}, subject, "")
+			errorPresc := prescRequest.ParseTemplate(iterateTemplate + ".html", data)
 			fmt.Println(errorPresc)
-			if errorPresc := prescRequest.ParseTemplate("template-teste.html", data); errorPresc == nil {
+			if errorPresc := prescRequest.ParseTemplate(iterateTemplate + ".html", data); errorPresc == nil {
 				tableDrugs += prescRequest.body
 				fmt.Println(prescRequest.body)
 			}
 		}
 	}
 
-	dispensation_pin := ctx.GetInput("prescription_option_pin").(string)
-	option_pin := ctx.GetInput("option_pin").(string)
-	expirationDate := ctx.GetInput("expiration_date").(string)
-	prescriptionIdTransf := ctx.GetInput("prescription_id").(string)
-	prescriptionIdBd := ctx.GetInput("prescription_id_db").(string)
+	dispensationPin := ctx.GetInput("5_c_prescription_dispensation_pin").(string)
+	optionPin := ctx.GetInput("5_d_prescription_option_pin").(string)
+	expirationDate := ctx.GetInput("5_e_prescription_expiration_date").(string)
+	prescriptionIdTransf := ctx.GetInput("5_a_prescription_id").(string)
+	prescriptionIdBd := ctx.GetInput("5_b_prescription_id_db").(string)
 
 
-	ercpnt := ctx.GetInput("3_patient_contact").(string)
-	from := fromName + " <" + emailFrom + ">";
+	contact := ctx.GetInput("2_a_patient_contact").(string)
+	from := fromName + " <" + emailFrom + ">"
 
 	sampleMsg := fmt.Sprintf("From: %s\r\n", from)
-	sampleMsg += fmt.Sprintf("To: %s\r\n", ercpnt)
-	sampleMsg += "Subject: " + "Prescrição Eletrónica Médica" + "\r\n"
+	sampleMsg += fmt.Sprintf("To: %s\r\n", contact)
+	sampleMsg += "Subject: " + subject + "\r\n"
 	sampleMsg += "MIME-Version: 1.0\r\n"
 	sampleMsg += "Content-Type: text/html; charset=\"utf-8\"\r\n"
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
@@ -233,9 +206,9 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 	to := []string{""}
 
 	if bcc == ""{
-		to = []string{ercpnt}
+		to = []string{contact}
 	}else{
-		to = []string{ercpnt, bcc}
+		to = []string{contact, bcc}
 	}
 
 	templateData := struct{
@@ -244,26 +217,25 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 		RightCode string
 		Date string
 	}{
-		Number: prescriptionIdTransf,
-		DismissalCode: dispensation_pin,
-		RightCode: option_pin,
-		Date: expirationDate,
+		Number:        prescriptionIdTransf,
+		DismissalCode: dispensationPin,
+		RightCode:     optionPin,
+		Date:          expirationDate,
 	}
 
 	footer := ""
-	fo := NewRequest([]string{ercpnt}, "medicação", "")
-	errory := fo.ParseTemplate("template-footer.html", templateData)
+	fo := NewRequest([]string{contact}, subject, "")
+	errory := fo.ParseTemplate(footerTemplate + ".html", templateData)
 	fmt.Println(errory)
-	if errory := fo.ParseTemplate("template-footer.html", templateData); errory == nil {
-		footer = fo.body;
+	if errory := fo.ParseTemplate(footerTemplate + ".html", templateData); errory == nil {
+		footer = fo.body
 	}
 
 
-	r := NewRequest([]string{ercpnt}, "medicação", "")
-
-	error1 := r.ParseTemplate("template-header.html", templateData)
+	r := NewRequest([]string{contact}, subject, "")
+	error1 := r.ParseTemplate(contentTemplate + ".html", templateData)
 	fmt.Println(error1)
-	if error1 := r.ParseTemplate("template-header.html", templateData); error1 == nil {
+	if error1 := r.ParseTemplate(contentTemplate + ".html", templateData); error1 == nil {
 
 		sampleMsg += r.body
 		sampleMsg += tableDrugs
@@ -278,7 +250,6 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			}else{
 				output = sampleMsg
 				success = true
-				handleError(endpoint, prescriptionIdBd)
 
 			}
 		}else{
@@ -290,8 +261,6 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			}else{
 				output = sampleMsg
 				success = true
-				handleError(endpoint, prescriptionIdBd)
-
 			}
 		}
 		log.Print("done.")
@@ -300,51 +269,54 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 return output, success
 }
 
+func convertToString(text interface{}) string{
+	text = *text.(*string)
+	fText := text.(string)
+
+	return fText
+}
+
 func createAppointment(ctx activity.Context){
 	//get input vars
-	server := ctx.GetInput("1_smtp_server").(string)
-	port := ctx.GetInput("1_smtp_port").(string)
-	emailauth := ctx.GetInput("1_smtp_auth_email").(string)
-	from_name := ctx.GetInput("1_smtp_sender_name").(string)
-	ssl := ctx.GetInput("1_smtp_ssl").(string)
-	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
-	apppass := ""
-	email_from := emailauth
+	server := ctx.GetInput("1_b_smtp_server").(string)
+	port := ctx.GetInput("1_c_smtp_port").(string)
+	emailAuth := ctx.GetInput("1_e_smtp_auth_email").(string)
+	fromName := ctx.GetInput("1_h_smtp_from_email").(string)
+	ssl := ctx.GetInput("1_d_smtp_ssl").(string)
+	bcc := ctx.GetInput("1_i_smtp_bcc_email").(string)
+	password := ""
+	emailFrom := emailAuth
 
 	if ssl != "true" {
-		apppass = ctx.GetInput("1_smtp_auth_password").(string)
-		email_from = ctx.GetInput("1_smtp_from_email").(string)
+		password = ctx.GetInput("1_f_smtp_auth_password").(string)
+		emailFrom = ctx.GetInput("1_h_smtp_from_email").(string)
 
 	}
 
 
-	appointment := ctx.GetInput("2_appointment_name").(string)
-	date := ctx.GetInput("2_appointment_date").(string)
+	appointment := ctx.GetInput("4_a_appointment_name").(string)
+	date := ctx.GetInput("4_b_appointment_date").(string)
 
 
-	clinic := ctx.GetInput("2_appointment_hospital").(string)
-	meet := ctx.GetInput("2_appointment_meet").(string)
-	subject := ctx.GetInput("2_appointment_subject").(string)
-	status := ctx.GetInput("2_appointment_status").(string)
-	appointment_id := ctx.GetInput("2_appointment_id").(string)
-	enddate := ctx.GetInput("2_appointment_end_date").(string)
-	appointment_int_id := ctx.GetInput("2_appointment_int_id").(string)
+	clinic := ctx.GetInput("4_c_appointment_hospital").(string)
+	meet := ctx.GetInput("4_d_appointment_meet").(string)
+	subject := ctx.GetInput("1_l_subject").(string)
+	status := ctx.GetInput("4_e_appointment_status").(string)
+	appointmentId := ctx.GetInput("4_f_appointment_id").(string)
+	endDate := ctx.GetInput("4_g_appointment_end_date").(string)
+	appointmentIntId := ctx.GetInput("4_h_appointment_int_id").(string)
 
-	ercpnt := ctx.GetInput("3_patient_contact").(string)
-	patient := ctx.GetInput("3_patient_name").(string)
+	contact := ctx.GetInput("2_a_patient_contact").(string)
+	patient := ctx.GetInput("2_b_patient_name").(string)
 
-	practitioner := ctx.GetInput("4_practitioner_name").(string)
+	practitioner := ctx.GetInput("3_a_practitioner_name").(string)
 
-	template := ctx.GetInput("5_template_name").(string)
-	image_footer := ctx.GetInput("5_template_image_footer").(string)
-	link_footer := ctx.GetInput("5_template_link_footer").(string)
-	image_footer_alt := ctx.GetInput("5_template_image_footer_alt").(string)
+	template := ctx.GetInput("4_i_appointment_template").(string)
 
-	organizer := ctx.GetInput("6_ics_organizer").(string)
-	prodid := ctx.GetInput("6_ics_prodid").(string)
+	organizer := ctx.GetInput("4_j_ics_organizer").(string)
+	prodid := ctx.GetInput("4_l_ics_prodid").(string)
 
-	endpoint := ctx.GetInput("1_smtp_error_endpoint").(string)
-	endpoint_email_template := ctx.GetInput("7_endpoint_email_template").(string)
+	endpoint := ctx.GetInput("1_j_smtp_error_endpoint").(string)
 
 
 	method := "CANCEL"
@@ -358,14 +330,14 @@ func createAppointment(ctx activity.Context){
 
 
 	date1 := time.Now()
-	fdate1 := date1.Format("20060102T150405Z")
+	fDate1 := date1.Format("20060102T150405Z")
 
 	loc, err := time.LoadLocation("Europe/Lisbon")
 	layout := "2006-01-02T15:04:05.000-0700"
 	fmt.Println(err);
 	startDate, errd := time.Parse(layout, date)
 
-	fenddade, errd := time.Parse(layout, enddate)
+	fEndDate, errd := time.Parse(layout, endDate)
 
 
 
@@ -394,12 +366,12 @@ func createAppointment(ctx activity.Context){
 		"END:DAYLIGHT\r"+
 		"END:VTIMEZONE\r"+
 		"BEGIN:VEVENT\r" +
-		"DTSTAMP:" + fdate1 + "\r" +
-		"UID:" + appointment_id + "\r" +
+		"DTSTAMP:" + fDate1 + "\r" +
+		"UID:" + appointmentId + "\r" +
 		"SEQUENCE:0\r" +
 		"ORGANIZER;" + organizer + "\r" +
 		"DTSTART:" + startDate.Format("20060102T150405Z") + "\r" +
-		"DTEND:" + fenddade.Format("20060102T150405Z") + "\r" +
+		"DTEND:" + fEndDate.Format("20060102T150405Z") + "\r" +
 		//"DTSTART;TZID=\"Europe/Lisbon\":" + startDate.Format("20060102T150405Z") + "\r" +
 		//"DTEND;TZID=\"Europe/Lisbon\":" + fenddade.Format("20060102T150405Z") + "\r" +
 		"STATUS:" + fstatus + "\r" +
@@ -418,13 +390,13 @@ func createAppointment(ctx activity.Context){
 	var (
 		serverAddr         = server
 		portNumber         = port
-		tos                = ercpnt
+		tos                = contact
 		attachmentFilePath = filename1
 		filename           = "invite.ics"
 		delimeter          = "**=cuf689407924327"
 	)
 
-	from := from_name + " <" + email_from + ">";
+	from := fromName + " <" + emailFrom + ">";
 
 	sampleMsg := fmt.Sprintf("From: %s\r\n", from)
 	sampleMsg += fmt.Sprintf("To: %s\r\n", tos)
@@ -436,7 +408,7 @@ func createAppointment(ctx activity.Context){
 	sampleMsg += "Content-Transfer-Encoding: 7bit\r\n"
 
 	startDate = startDate.In(loc)
-	fenddade = fenddade.In(loc)
+	fEndDate = fEndDate.In(loc)
 
 
 	templateData := struct {
@@ -447,9 +419,6 @@ func createAppointment(ctx activity.Context){
 		Hour         string
 		Meet         string
 		Hospital     string
-		Footer       string
-		Image        string
-		Alt          string
 	}{
 		Name:         patient,
 		Appointment:  appointment,
@@ -458,12 +427,9 @@ func createAppointment(ctx activity.Context){
 		Hour:         handlehour(startDate.Hour()) + ":" + handlehour(startDate.Minute()),
 		Meet:         meet,
 		Hospital:     clinic,
-		Footer:       link_footer,
-		Image:        image_footer,
-		Alt:          image_footer_alt,
 	}
 
-	r := NewRequest([]string{ercpnt}, subject, "")
+	r := NewRequest([]string{contact}, subject, "")
 	error1 := r.ParseTemplate(template+".html", templateData)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
@@ -486,21 +452,22 @@ func createAppointment(ctx activity.Context){
 
 
 		if ssl != "true" {
-			auth := smtp.PlainAuth("", emailauth, apppass, serverAddr)
-			err := smtp.SendMail(serverAddr+":"+portNumber, auth, email_from, to, []byte(sampleMsg))
+			auth := smtp.PlainAuth("", emailAuth, password, serverAddr)
+			err := smtp.SendMail(serverAddr+":"+portNumber, auth, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
-				handleError(endpoint, appointment_int_id)
+				handleError(endpoint, appointmentId)
 			}else{
-				saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
+				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}else{
-			err := smtp.SendMail(serverAddr+":"+portNumber, nil, email_from, to, []byte(sampleMsg))
+			err := smtp.SendMail(serverAddr+":"+portNumber, nil, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
-				handleError(endpoint, appointment_int_id)
+				handleError(endpoint, appointmentIntId)
+				handleError(endpoint, appointmentIntId)
 			}else{
-				saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
+				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}
 
@@ -584,7 +551,6 @@ func handleError(endpoint string, id string) {
 	}
 	fmt.Println("Terminating retry update")
 }
-
 
 func saveTemplateEmail(text string, endpoint string, id string){
 	requestBody, err1 := json.Marshal(map[string]string{

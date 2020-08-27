@@ -9,162 +9,174 @@
 
   "inputs":[
     {
-      "name": "type",
+      "name": "1_a_type",
       "type": "string",
+      "allowed" : ["appointment", "prescription"],
       "required" : true
     },
 	{
-      "name": "1_smtp_server",
+      "name": "1_b_smtp_server",
       "type": "string",
       "required": true
     },
 	{
-      "name": "1_smtp_port",
+      "name": "1_c_smtp_port",
       "type": "string",
       "required": true
     },
 	{
-      "name": "1_smtp_auth_email",
+      "name": "1_e_smtp_auth_email",
       "type": "string",
       "required": true
     },
     {
-      "name": "1_smtp_from_email",
+      "name": "1_h_smtp_from_email",
       "type": "string",
       "required": true
     },
     {
-      "name": "1_smtp_error_endpoint",
+      "name": "1_j_smtp_error_endpoint",
       "type": "string",
       "required": true
     },
 	{
-      "name": "1_smtp_auth_password",
+      "name": "1_f_smtp_auth_password",
       "type": "string",
       "required": true
     },
     {
-      "name": "1_smtp_sender_name",
+      "name": "1_g_smtp_sender_name",
       "type": "string",
       "required": true
     },
     {
-      "name": "1_smtp_ssl",
+      "name": "1_d_smtp_ssl",
+      "type": "string",
+      "allowed" : ["true", "false"],
+      "required": true
+    },
+    {
+      "name": "1_i_smtp_bcc_email",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "1_l_subject",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "2_a_patient_contact",
       "type": "string",
       "required": true
     },
     {
-      "name": "1_smtp_bcc_email",
+      "name": "2_b_patient_name",
       "type": "string",
       "required": false
     },
     {
-      "name": "3_patient_contact",
+      "name": "3_a_practitioner_name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_a_appointment_name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_b_appointment_date",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_c_appointment_hospital",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_d_appointment_meet",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "4_i_appointment_template",
       "type": "string",
       "required": true
     },
     {
-      "name": "2_appointment_name",
+      "name": "4_e_appointment_status",
       "type": "string",
       "required": false
     },
     {
-      "name": "3_patient_name",
+      "name": "4_f_appointment_id",
       "type": "string",
       "required": false
     },
     {
-      "name": "4_practitioner_name",
+      "name": "4_g_appointment_end_date",
       "type": "string",
       "required": false
     },
     {
-      "name": "2_appointment_date",
+      "name": "4_j_ics_organizer",
       "type": "string",
       "required": false
     },
     {
-      "name": "2_appointment_hospital",
+      "name": "4_l_ics_prodid",
       "type": "string",
       "required": false
     },
     {
-      "name": "2_appointment_meet",
+      "name": "4_h_appointment_int_id",
       "type": "string",
       "required": false
     },
     {
-      "name": "2_appointment_subject",
+      "name" : "5_c_prescription_dispensation_pin",
       "type": "string",
       "required": false
     },
     {
-      "name": "5_template_name",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "2_appointment_status",
+      "name" : "5_d_prescription_option_pin",
       "type": "string",
       "required": false
     },
     {
-      "name": "2_appointment_id",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "2_appointment_end_date",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "6_ics_organizer",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "6_ics_prodid",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "2_appointment_int_id",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "7_endpoint_email_template",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name" : "prescription_option_pin",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name" : "option_pin",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name" : "drugs",
+      "name" : "5_f_prescription_drugs",
       "type" : "array",
       "required" : false
     },
     {
-      "name" : "expiration_date",
+      "name" : "5_e_prescription_expiration_date",
       "type" : "string",
       "required" : false
     },
     {
-      "name" : "prescription_id",
+      "name" : "5_a_prescription_id",
       "type" : "string",
       "required" : false
     },
     {
-      "name" : "prescription_id_db",
+      "name" : "5_b_prescription_id_db",
+      "type" : "string",
+      "required" : false
+    },
+    {
+      "name" : "5_g_prescription_template_content",
+      "type" : "string",
+      "required" : false
+    },
+    {
+      "name" : "5_h_prescription_template_drugs",
+      "type" : "string",
+      "required" : false
+    },
+    {
+      "name" : "5_i_template_footer",
       "type" : "string",
       "required" : false
     }
