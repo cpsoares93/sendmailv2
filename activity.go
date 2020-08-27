@@ -490,6 +490,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 	}
 	fmt.Println(error1)
+
+	return email, success
 }
 
 func CreateTempFile(serializer string) string {
@@ -562,24 +564,6 @@ func handleError(endpoint string, id string) {
 		fmt.Println(string(data))
 	}
 	fmt.Println("Terminating retry update")
-}
-
-func saveTemplateEmail(text string, endpoint string, id string){
-	requestBody, err1 := json.Marshal(map[string]string{
-		"text" : text,
-	})
-	if err1 != nil{
-		log.Fatalln(err1)
-	}
-	response, err := http.Post(endpoint + "/" + id, "application/json", bytes.NewBuffer(requestBody))
-	if err != nil {
-		fmt.Printf("The HTTP request failed with error %s\n", err)
-	} else {
-		data, _ := ioutil.ReadAll(response.Body)
-		fmt.Println(string(data))
-	}
-
-
 }
 
 func handlehour(number int) (formatted string){
