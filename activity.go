@@ -45,7 +45,9 @@ func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 	emailType := ctx.GetInput("1_a_type")
 
 	if emailType == "appointment"{
-		createAppointment(ctx)
+		output, success := createAppointment(ctx)
+		ctx.SetOutput("email", output)
+		ctx.SetOutput("sent", success)
 	}else{
 		output, success := createPrescription(ctx)
 		ctx.SetOutput("email", output)
@@ -247,6 +249,8 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			if(err != nil){
 				fmt.Println(err)
 				handleError(endpoint, prescriptionIdBd)
+				email = ""
+				success = false
 			}else{
 				output = sampleMsg
 				success = true
@@ -257,7 +261,8 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			if(err != nil){
 				fmt.Println(err)
 				handleError(endpoint, prescriptionIdBd)
-
+				email = ""
+				success = false
 			}else{
 				output = sampleMsg
 				success = true
@@ -276,7 +281,7 @@ func convertToString(text interface{}) string{
 	return fText
 }
 
-func createAppointment(ctx activity.Context){
+func createAppointment(ctx activity.Context) (email string, success bool){
 	//get input vars
 	server := ctx.GetInput("1_b_smtp_server").(string)
 	port := ctx.GetInput("1_c_smtp_port").(string)
@@ -457,16 +462,23 @@ func createAppointment(ctx activity.Context){
 			if(err != nil){
 				fmt.Println(err)
 				handleError(endpoint, appointmentId)
+				success = false
+				email = ""
 			}else{
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
+				email = sampleMsg
+				success = true
 			}
 		}else{
 			err := smtp.SendMail(serverAddr+":"+portNumber, nil, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
 				handleError(endpoint, appointmentIntId)
-				handleError(endpoint, appointmentIntId)
+				success = false
+				email = ""
 			}else{
+				email = sampleMsg
+				success = true
 				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}

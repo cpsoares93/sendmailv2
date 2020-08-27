@@ -63,7 +63,7 @@
     {
       "name": "1_l_subject",
       "type": "string",
-      "required": false
+      "required": true
     },
     {
       "name": "2_a_patient_contact",
@@ -103,7 +103,7 @@
     {
       "name": "4_i_appointment_template",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
       "name": "4_e_appointment_status",
