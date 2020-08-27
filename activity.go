@@ -67,6 +67,8 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 	bcc := ctx.GetInput("1_smtp_bcc_email").(string)
 	password := ""
 	emailFrom := emailAuth
+	endpoint := ctx.GetInput("1_smtp_error_endpoint").(string)
+
 	//template := ctx.GetInput("5_template_name").(string)
 
 	if ssl != "true" {
@@ -215,6 +217,7 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 	option_pin := ctx.GetInput("option_pin").(string)
 	expirationDate := ctx.GetInput("expiration_date").(string)
 	prescriptionIdTransf := ctx.GetInput("prescription_id").(string)
+	prescriptionIdBd := ctx.GetInput("prescription_id_db").(string)
 
 
 	ercpnt := ctx.GetInput("3_patient_contact").(string)
@@ -271,73 +274,30 @@ func createPrescription(ctx activity.Context) (email string, success bool){
 			err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
-				//handleError(endpoint, appointment_int_id)
+				handleError(endpoint, prescriptionIdBd)
 			}else{
 				output = sampleMsg
 				success = true
-				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
+				handleError(endpoint, prescriptionIdBd)
+
 			}
 		}else{
 			err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
-				//handleError(endpoint, appointment_int_id)
+				handleError(endpoint, prescriptionIdBd)
+
 			}else{
 				output = sampleMsg
 				success = true
-				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
+				handleError(endpoint, prescriptionIdBd)
+
 			}
 		}
 		log.Print("done.")
 	}
 
-
-
-
-
-	//if ssl != "true" {
-	//	auth := smtp.PlainAuth("", emailAuth, password, server)
-	//	err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
-	//	if(err != nil){
-	//		fmt.Println(err)
-	//		//handleError(endpoint, appointment_int_id)
-	//	}else{
-	//		//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
-	//	}
-	//}else{
-	//	err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
-	//	if(err != nil){
-	//		fmt.Println(err)
-	//		//handleError(endpoint, appointment_int_id)
-	//	}else{
-	//		//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
-	//	}
-	//}
-
 return output, success
-}
-type Teste struct {
-	teste string
-}
-
-func NewTeste(teste string) Teste{
-	return Teste{
-		teste: teste,
-	}
-}
-
-type Prescription struct{
-	number	string
-	dismissalCode string
-	rightCode string
-}
-
-func NewPrescription(number string, dismissalCode string, rightCode string) *Prescription{
-	return &Prescription{
-		number: number,
-		dismissalCode: dismissalCode,
-		rightCode: rightCode,
-	}
 }
 
 func createAppointment(ctx activity.Context){

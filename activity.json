@@ -162,6 +162,11 @@
       "name" : "prescription_id",
       "type" : "string",
       "required" : false
+    },
+    {
+      "name" : "prescription_id_db",
+      "type" : "string",
+      "required" : false
     }
   ],
   "outputs": [
