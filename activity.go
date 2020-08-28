@@ -551,6 +551,9 @@ func (r *Request) ParseTemplate(templateFileName string, data interface{}) error
 func handleError(endpoint string, id string) {
 	fmt.Println("Init retry update")
 
+	fmt.Println(endpoint)
+	fmt.Println(id)
+
 	requestBody, err1 := json.Marshal(map[string]string{
 	})
 	if err1 == nil{
