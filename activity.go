@@ -456,6 +456,12 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		to := []string{tos, bcc}
 
 
+		if bcc == ""{
+			to = []string{contact}
+		}else{
+			to = []string{contact, bcc}
+		}
+
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailAuth, password, serverAddr)
 			err := smtp.SendMail(serverAddr+":"+portNumber, auth, emailFrom, to, []byte(sampleMsg))
