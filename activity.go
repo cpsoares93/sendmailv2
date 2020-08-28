@@ -461,7 +461,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 			err := smtp.SendMail(serverAddr+":"+portNumber, auth, emailFrom, to, []byte(sampleMsg))
 			if(err != nil){
 				fmt.Println(err)
-				handleError(endpoint, appointmentId)
+				handleError(endpoint, appointmentIntId)
 				success = false
 				email = ""
 			}else{
