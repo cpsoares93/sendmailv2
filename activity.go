@@ -429,7 +429,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		Appointment:  appointment,
 		Practitioner: practitioner,
 		Date:         strconv.Itoa(startDate.Day()) + "/" + strconv.Itoa(int(startDate.Month())),
-		Hour:         handlehour(startDate.Hour()) + ":" + handlehour(startDate.Minute()),
+		Hour:         handleHour(startDate.Hour()) + ":" + handleHour(startDate.Minute()),
 		Meet:         meet,
 		Hospital:     clinic,
 	}
@@ -465,19 +465,18 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		if ssl != "true" {
 			auth := smtp.PlainAuth("", emailAuth, password, serverAddr)
 			err := smtp.SendMail(serverAddr+":"+portNumber, auth, emailFrom, to, []byte(sampleMsg))
-			if(err != nil){
+			if err != nil {
 				fmt.Println(err)
 				handleError(endpoint, appointmentIntId)
 				success = false
 				email = ""
 			}else{
-				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 				email = sampleMsg
 				success = true
 			}
 		}else{
 			err := smtp.SendMail(serverAddr+":"+portNumber, nil, emailFrom, to, []byte(sampleMsg))
-			if(err != nil){
+			if err != nil {
 				fmt.Println(err)
 				handleError(endpoint, appointmentIntId)
 				success = false
@@ -485,7 +484,6 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 			}else{
 				email = sampleMsg
 				success = true
-				//saveTemplateEmail(sampleMsg, endpoint_email_template, appointment_int_id)
 			}
 		}
 
@@ -557,9 +555,6 @@ func (r *Request) ParseTemplate(templateFileName string, data interface{}) error
 func handleError(endpoint string, id string) {
 	fmt.Println("Init retry update")
 
-	fmt.Println(endpoint)
-	fmt.Println(id)
-
 	requestBody, err1 := json.Marshal(map[string]string{
 	})
 	if err1 == nil{
@@ -575,7 +570,7 @@ func handleError(endpoint string, id string) {
 	fmt.Println("Terminating retry update")
 }
 
-func handlehour(number int) (formatted string){
+func handleHour(number int) (formatted string){
 	formatted = strconv.Itoa(number)
 	if number == 0{
 		formatted = "00"
