@@ -324,6 +324,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 	endpoint := ctx.GetInput("1_j_smtp_error_endpoint").(string)
 
+	preparation1 := ctx.GetInput("4_m_appointment_preparation")
+	fmt.Println(preparation1)
 	preparation := ctx.GetInput("4_m_appointment_preparation").([][]interface{})
 
 
