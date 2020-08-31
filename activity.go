@@ -418,6 +418,11 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 	startDate = startDate.In(loc)
 	fEndDate = fEndDate.In(loc)
 
+	isPreparation := false;
+	if len(preparation) > 0 {
+		isPreparation = true
+	}
+
 
 	templateData := struct {
 		Name         string
@@ -427,6 +432,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		Hour         string
 		Meet         string
 		Hospital     string
+		IsPreparation bool
 	}{
 		Name:         patient,
 		Appointment:  appointment,
@@ -435,6 +441,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		Hour:         handleHour(startDate.Hour()) + ":" + handleHour(startDate.Minute()),
 		Meet:         meet,
 		Hospital:     clinic,
+		IsPreparation: isPreparation,
 	}
 
 	data := struct {
