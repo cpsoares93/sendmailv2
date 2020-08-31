@@ -321,6 +321,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	preparation := ctx.GetInput("4_m_appointment_preparation")
 
+	templatePreparation := ctx.GetInput("4_n_appointment_template_preparation").(string)
+
 	var preparationArray [][]interface{}
 
 	if preparation != nil {
@@ -470,9 +472,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	if len(preparationArray ) > 0 || preparation != nil {
 		if data.DescPrep != ""{
 			prepRequest := NewRequest([]string{""}, subject, "")
-			errorPrep := prepRequest.ParseTemplate("template-preparation-iterate.html", data)
+			errorPrep := prepRequest.ParseTemplate(templatePreparation + ".html", data)
 			fmt.Println(errorPrep)
-			if errorPrep := prepRequest.ParseTemplate("template-preparation-iterate.html", data); errorPrep == nil {
+			if errorPrep := prepRequest.ParseTemplate(templatePreparation + ".html", data); errorPrep == nil {
 				preparationText += prepRequest.body
 				fmt.Println(prepRequest.body)
 			}

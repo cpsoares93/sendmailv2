@@ -134,9 +134,15 @@
       "name": "4_h_appointment_int_id",
       "type": "string",
       "required": false
-    }, {
+    },
+    {
       "name": "4_m_appointment_preparation",
       "type": "array",
+      "required": false
+    },
+    {
+      "name": "4_n_appointment_template_preparation",
+      "type": "string",
       "required": false
     },
     {
