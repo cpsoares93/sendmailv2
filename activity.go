@@ -454,6 +454,10 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		contentType = *contentType.(*string)
 
 		title := preparation[i][0]
+
+		fmt.Println("cenas")
+		fmt.Println(title.(string))
+
 		title = *title.(*string)
 
 		fmt.Println(title.(string))
