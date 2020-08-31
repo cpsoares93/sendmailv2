@@ -479,9 +479,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	footer := ""
 	fo := NewRequest([]string{contact}, subject, "")
-	errory := fo.ParseTemplate("template-ato-booked-footer.html", templateData)
+	errory := fo.ParseTemplate(template + "-footer.html", templateData)
 	fmt.Println(errory)
-	if errory := fo.ParseTemplate("template-ato-booked-footer.html", templateData); errory == nil {
+	if errory := fo.ParseTemplate(template + "-footer.html", templateData); errory == nil {
 		footer = fo.body
 	}
 
