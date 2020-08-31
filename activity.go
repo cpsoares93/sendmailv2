@@ -15,6 +15,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"github.com/spf13/cast"
 )
 
 type Appointment struct {
@@ -454,15 +455,19 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		contentType = *contentType.(*string)
 
 		title := preparation[i][0]
-		title = title.(*interface{})
 
-		teste1 := title.(interface{})
+		testy := cast.ToString(title)
+		fmt.Println(testy)
 
-
-
-
-		fmt.Println("cenas")
-		fmt.Println(*teste1.(*string))
+		//title = title.(*interface{})
+		//
+		//teste1 := title.(interface{})
+		//
+		//
+		//
+		//
+		//fmt.Println("cenas")
+		//fmt.Println(*teste1.(*string))
 
 
 
