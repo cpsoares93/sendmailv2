@@ -451,36 +451,13 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 
 	for i := 0; i < len(preparation); i++ {
-		contentType := preparation[i][2]
-		contentType = *contentType.(*string)
 
-		title := preparation[i][0]
-
-		testy := cast.ToString(title)
-		fmt.Println(testy)
-
-		//title = title.(*interface{})
-		//
-		//teste1 := title.(interface{})
-		//
-		//
-		//
-		//
-		//fmt.Println("cenas")
-		//fmt.Println(*teste1.(*string))
-
-
-
-		//title = *title.(*string)
-
-		//fmt.Println(title.(string))
-
-		if contentType.(string) == "TITULO_PREPARACAO" {
-			data.PrepTitle = title.(string)
-		}else if contentType.(string) == "DESCRICAO_PREPARACAO" {
-			data.DescPrep = title.(string)
-		}else if contentType.(string) == "INFORMACAO_ADICIONAL" {
-			data.Info = title.(string)
+		if cast.ToString(preparation[i][2]) == "TITULO_PREPARACAO" {
+			data.PrepTitle = cast.ToString(preparation[i][0])
+		}else if cast.ToString(preparation[i][2]) == "DESCRICAO_PREPARACAO" {
+			data.DescPrep = cast.ToString(preparation[i][0])
+		}else if cast.ToString(preparation[i][2]) == "INFORMACAO_ADICIONAL" {
+			data.Info = cast.ToString(preparation[i][0])
 		}
 	}
 
