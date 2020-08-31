@@ -323,6 +323,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 	endpoint := ctx.GetInput("1_j_smtp_error_endpoint").(string)
 
+	preparation := ctx.GetInput("4_m_appointment_preparation").([][]interface{})
+
 
 	method := "CANCEL"
 	fstatus := "CANCELLED"
@@ -434,10 +436,55 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		Hospital:     clinic,
 	}
 
+	data := struct {
+		PrepTitle string
+		DescExam string
+		DescPrep string
+		Info string
+	}{
+		PrepTitle: "",
+		DescExam: "",
+		DescPrep: "",
+		Info: "",
+	}
+
+
+	for i := 0; i < len(preparation); i++ {
+		contentType := preparation[i][2]
+		contentType = *contentType.(*string)
+
+		title := preparation[i][1]
+		title = *title.(*string)
+
+		if contentType.(string) == "TITULO_PREPARACAO" {
+			data.PrepTitle = title.(string)
+		}else if contentType.(string) == "DESCRICAO_PREPARACAO" {
+			data.DescPrep = title.(string)
+		}else if contentType.(string) == "INFORMACAO_ADICIONAL" {
+			data.Info = title.(string)
+		}
+	}
+
+	preparationText := ""
+
+
+	prepRequest := NewRequest([]string{""}, subject, "")
+	errorPrep := prepRequest.ParseTemplate( "template-preparation-iterate.html", data)
+	fmt.Println(errorPrep)
+	if errorPrep := prepRequest.ParseTemplate("template-preparation-iterate.html", data); errorPrep == nil {
+		preparationText += prepRequest.body
+		fmt.Println(prepRequest.body)
+	}
+
+
+
 	r := NewRequest([]string{contact}, subject, "")
 	error1 := r.ParseTemplate(template+".html", templateData)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
+
+		sampleMsg += "Preparação de exame"
+		sampleMsg += preparationText
 
 		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 		sampleMsg += "Content-Type: text/calendar; charset=\"utf-8\"\r\n"
