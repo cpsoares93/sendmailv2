@@ -324,9 +324,14 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 	endpoint := ctx.GetInput("1_j_smtp_error_endpoint").(string)
 
-	preparation1 := ctx.GetInput("4_m_appointment_preparation")
-	fmt.Println(preparation1)
-	preparation := ctx.GetInput("4_m_appointment_preparation").([][]interface{})
+	preparation := ctx.GetInput("4_m_appointment_preparation")
+
+	var preparationArray [][]interface{}
+
+	if preparation != nil {
+		preparationArray = preparation.([][]interface{})
+
+	}
 
 
 	method := "CANCEL"
@@ -420,8 +425,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 	startDate = startDate.In(loc)
 	fEndDate = fEndDate.In(loc)
 
-	isPreparation := false;
-	if len(preparation) > 0 {
+	isPreparation := false
+	if len(preparationArray) > 0 {
 		isPreparation = true
 	}
 
@@ -459,14 +464,14 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 	}
 
 
-	for i := 0; i < len(preparation); i++ {
+	for i := 0; i < len(preparationArray); i++ {
 
-		if cast.ToString(preparation[i][2]) == "TITULO_PREPARACAO" {
-			data.PrepTitle = cast.ToString(preparation[i][0])
-		}else if cast.ToString(preparation[i][2]) == "DESCRICAO_PREPARACAO" {
-			data.DescPrep = cast.ToString(preparation[i][0])
-		}else if cast.ToString(preparation[i][2]) == "INFORMACAO_ADICIONAL" {
-			data.Info = cast.ToString(preparation[i][0])
+		if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
+			data.PrepTitle = cast.ToString(preparationArray[i][0])
+		}else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
+			data.DescPrep = cast.ToString(preparationArray[i][0])
+		}else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
+			data.Info = cast.ToString(preparationArray[i][0])
 		}
 	}
 
