@@ -467,7 +467,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	fmt.Println(len(preparationArray))
 
-	if len(preparationArray ) > 0 || preparation == nil {
+	if len(preparationArray ) > 0 || preparation != nil {
 		prepRequest := NewRequest([]string{""}, subject, "")
 		errorPrep := prepRequest.ParseTemplate("template-preparation-iterate.html", data)
 		fmt.Println(errorPrep)
