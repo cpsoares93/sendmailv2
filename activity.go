@@ -459,7 +459,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 
 		fmt.Println("cenas")
 		fmt.Println(title)
-		fmt.Println(title.(*string))
+		fmt.Println(*title.(*string))
 
 		//title = *title.(*string)
 
