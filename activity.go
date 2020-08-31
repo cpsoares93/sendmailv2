@@ -456,10 +456,14 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		title := preparation[i][0]
 		title = title.(*interface{})
 
+		teste1 := title.(interface{})
+
+
+
 
 		fmt.Println("cenas")
-		fmt.Println(title)
-		fmt.Println(*title.(*string))
+		fmt.Println(teste1.(string))
+
 
 		//title = *title.(*string)
 
