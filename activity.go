@@ -463,6 +463,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		Info: "",
 	}
 
+	fmt.Println(preparationArray)
+
 
 	for i := 0; i < len(preparationArray); i++ {
 
