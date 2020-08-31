@@ -486,7 +486,7 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 	error1 := r.ParseTemplate(template+".html", templateData)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
-		//sampleMsg += preparationText
+		sampleMsg += preparationText
 		sampleMsg += footer
 
 		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
