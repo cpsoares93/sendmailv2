@@ -456,6 +456,8 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		title := preparation[i][0]
 		title = *title.(*string)
 
+		fmt.Println(title.(string))
+
 		if contentType.(string) == "TITULO_PREPARACAO" {
 			data.PrepTitle = title.(string)
 		}else if contentType.(string) == "DESCRICAO_PREPARACAO" {
