@@ -476,15 +476,22 @@ func createAppointment(ctx activity.Context) (email string, success bool){
 		fmt.Println(prepRequest.body)
 	}
 
+	footer := ""
+	fo := NewRequest([]string{contact}, subject, "")
+	errory := fo.ParseTemplate(  "template-ato-booked-footer.html", templateData)
+	fmt.Println(errory)
+	if errory := fo.ParseTemplate("template-ato-booked-footer.html", templateData); errory == nil {
+		footer = fo.body
+	}
+
 
 
 	r := NewRequest([]string{contact}, subject, "")
 	error1 := r.ParseTemplate(template+".html", templateData)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
 		sampleMsg += r.body
-
-		sampleMsg += "Preparação de exame"
 		sampleMsg += preparationText
+		sampleMsg += footer
 
 		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 		sampleMsg += "Content-Type: text/calendar; charset=\"utf-8\"\r\n"
