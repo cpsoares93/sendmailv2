@@ -456,6 +456,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	for i := 0; i < len(preparationArray); i++ {
 
+		fmt.Println("+++++++")
+		fmt.Println(preparationArray[i][0])
+
 		if preparationArray[i][0] == nil {
 			fmt.Println("null")
 		} else {
