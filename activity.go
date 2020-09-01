@@ -456,23 +456,28 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	for i := 0; i < len(preparationArray); i++ {
 
-		if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
-			data.PrepTitle = cast.ToString(preparationArray[i][0])
-		} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
-			if data.DescPrep != "" {
-				data.DescPrep += "\n"
+		if preparationArray[i][0] == nil {
+			fmt.Println("null")
+		} else {
+
+			if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
+				data.PrepTitle = cast.ToString(preparationArray[i][0])
+			} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
+				if data.DescPrep != "" {
+					data.DescPrep += "\n"
+				}
+				data.DescPrep += cast.ToString(preparationArray[i][0])
+			} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
+				if data.Info != "" {
+					data.Info += "\n"
+				}
+				data.Info += cast.ToString(preparationArray[i][0])
+			} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
+				if data.DescExam != "" {
+					data.DescExam += "\n"
+				}
+				data.DescExam += cast.ToString(preparationArray[i][0])
 			}
-			data.DescPrep += cast.ToString(preparationArray[i][0])
-		} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
-			if data.Info != "" {
-				data.Info += "\n"
-			}
-			data.Info += cast.ToString(preparationArray[i][0])
-		}else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
-			if data.DescExam != ""{
-				data.DescExam += "\n"
-			}
-			data.DescExam += cast.ToString(preparationArray[i][0])
 		}
 	}
 
@@ -480,12 +485,12 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	fmt.Println(len(preparationArray))
 
-	if len(preparationArray ) > 0 || preparation != nil {
-		if data.DescPrep != ""{
+	if len(preparationArray) > 0 || preparation != nil {
+		if data.DescPrep != "" {
 			prepRequest := NewRequest([]string{""}, subject, "")
-			errorPrep := prepRequest.ParseTemplate(templatePreparation + ".html", data)
+			errorPrep := prepRequest.ParseTemplate(templatePreparation+".html", data)
 			fmt.Println(errorPrep)
-			if errorPrep := prepRequest.ParseTemplate(templatePreparation + ".html", data); errorPrep == nil {
+			if errorPrep := prepRequest.ParseTemplate(templatePreparation+".html", data); errorPrep == nil {
 				preparationText += prepRequest.body
 				fmt.Println(prepRequest.body)
 			}
@@ -495,9 +500,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	footer := ""
 	fo := NewRequest([]string{contact}, subject, "")
-	errory := fo.ParseTemplate(template + "-footer.html", templateData)
+	errory := fo.ParseTemplate(template+"-footer.html", templateData)
 	fmt.Println(errory)
-	if errory := fo.ParseTemplate(template + "-footer.html", templateData); errory == nil {
+	if errory := fo.ParseTemplate(template+"-footer.html", templateData); errory == nil {
 		footer = fo.body
 	}
 
