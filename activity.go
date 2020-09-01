@@ -457,11 +457,15 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	linkBucketFiles := ctx.GetInput("4_o_appointment_preparation_files").(string)
 
+
 	var files []string
 
 	for i := 0; i < len(preparationArray); i++ {
 
 		if cast.ToString(preparationArray[i][0]) == "" {
+			fmt.Println("cenas")
+			fmt.Println(linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
+
 			files = append(files, cast.ToString(preparationArray[i][3]) + ".pdf")
 			err := DownloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 			if err != nil {
