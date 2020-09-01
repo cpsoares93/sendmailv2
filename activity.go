@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
+	"github.com/spf13/cast"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,7 +16,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-	"github.com/spf13/cast"
 )
 
 type Appointment struct {
@@ -462,6 +462,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			data.DescPrep = cast.ToString(preparationArray[i][0])
 		} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
 			data.Info = cast.ToString(preparationArray[i][0])
+		}else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
+			data.DescExam = cast.ToString(preparationArray[i][0])
 		}
 	}
 
