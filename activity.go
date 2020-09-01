@@ -687,7 +687,8 @@ func handleHour(number int) (formatted string) {
 }
 
 func DownloadFile(filepath string, url string) error {
-
+	fmt.Println(filepath)
+	fmt.Println(url)
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
