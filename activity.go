@@ -460,7 +460,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		fmt.Println(cast.ToString(preparationArray[i][0]))
 		fmt.Println(preparationArray[i][0])
 
-		if preparationArray[i][0] == nil {
+		if preparationArray[i][0] == "" {
 			fmt.Println("null")
 		} else {
 
