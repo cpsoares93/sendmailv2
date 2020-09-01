@@ -546,10 +546,10 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			}
 			sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-			err1 := os.Remove(files[k])  // remove a single file
-			if err1 != nil {
-				fmt.Println(err1)
-			}
+			//err1 := os.Remove(files[k])  // remove a single file
+			//if err1 != nil {
+			//	fmt.Println(err1)
+			//}
 		}
 
 		log.Println("Write content into client writter I/O")
