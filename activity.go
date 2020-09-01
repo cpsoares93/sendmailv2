@@ -459,11 +459,20 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
 			data.PrepTitle = cast.ToString(preparationArray[i][0])
 		} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
-			data.DescPrep = cast.ToString(preparationArray[i][0])
+			if data.DescPrep != "" {
+				data.DescPrep += "\n"
+			}
+			data.DescPrep += cast.ToString(preparationArray[i][0])
 		} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
-			data.Info = cast.ToString(preparationArray[i][0])
+			if data.Info != "" {
+				data.Info += "\n"
+			}
+			data.Info += cast.ToString(preparationArray[i][0])
 		}else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
-			data.DescExam = cast.ToString(preparationArray[i][0])
+			if data.DescExam != ""{
+				data.DescExam += "\n"
+			}
+			data.DescExam += cast.ToString(preparationArray[i][0])
 		}
 	}
 
