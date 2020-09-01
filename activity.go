@@ -9,6 +9,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/spf13/cast"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -454,15 +455,18 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		Info:      "",
 	}
 
+	linkBucketFiles := ctx.GetInput("4_o_appointment_preparation_files").(string)
+
+	var files []string
+
 	for i := 0; i < len(preparationArray); i++ {
 
-		fmt.Println("+++++++")
-		fmt.Println(cast.ToString(preparationArray[i][0]))
-		fmt.Println(preparationArray[i][0])
-		fmt.Println(len(cast.ToString(preparationArray[i][0])))
-
 		if cast.ToString(preparationArray[i][0]) == "" {
-			fmt.Println("null")
+			files = append(files, cast.ToString(preparationArray[i][3]) + ".pdf")
+			err := DownloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
+			if err != nil {
+				panic(err)
+			}
 		} else {
 
 			if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
@@ -485,6 +489,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			}
 		}
 	}
+
+	fmt.Println(files)
 
 	preparationText := ""
 
@@ -523,11 +529,28 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 		sampleMsg += "Content-Disposition: attachment;filename=\"" + filename + "\"\r\n"
 
+		for k := 0; k< len(files); k++ {
+			sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
+		}
+
 		rawFile, fileErr := ioutil.ReadFile(attachmentFilePath)
 		if fileErr != nil {
 			log.Panic(fileErr)
 		}
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
+
+		for k := 0; k< len(files); k++ {
+			rawFile, fileErr := ioutil.ReadFile(files[k])
+			if fileErr != nil {
+				log.Panic(fileErr)
+			}
+			sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
+
+			err1 := os.Remove(files[k])  // remove a single file
+			if err1 != nil {
+				fmt.Println(err1)
+			}
+		}
 
 		log.Println("Write content into client writter I/O")
 
@@ -657,4 +680,25 @@ func handleHour(number int) (formatted string) {
 		}
 	}
 	return formatted
+}
+
+func DownloadFile(filepath string, url string) error {
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return err
 }

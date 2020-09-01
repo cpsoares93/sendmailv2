@@ -146,6 +146,11 @@
       "required": false
     },
     {
+      "name": "4_o_appointment_preparation_files",
+      "type": "string",
+      "required": false
+    },
+    {
       "name" : "5_c_prescription_dispensation_pin",
       "type": "string",
       "required": false
