@@ -467,7 +467,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			fmt.Println(linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 
 			files = append(files, cast.ToString(preparationArray[i][3]) + ".pdf")
-			err := DownloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
+			err := downloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 			if err != nil {
 				panic(err)
 			}
@@ -686,9 +686,7 @@ func handleHour(number int) (formatted string) {
 	return formatted
 }
 
-func DownloadFile(filepath string, url string) error {
-	fmt.Println(filepath)
-	fmt.Println(url)
+func downloadFile(filepath string, url string) error {
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
