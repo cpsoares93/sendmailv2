@@ -459,8 +459,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		fmt.Println("+++++++")
 		fmt.Println(cast.ToString(preparationArray[i][0]))
 		fmt.Println(preparationArray[i][0])
+		fmt.Println(len(cast.ToString(preparationArray[i][0])))
 
-		if preparationArray[i][0] == "" {
+		if preparationArray[i][0]!= "" {
 			fmt.Println("null")
 		} else {
 
