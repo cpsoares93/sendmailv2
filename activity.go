@@ -434,7 +434,13 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		Info:      "",
 	}
 
-	linkBucketFiles := ctx.GetInput("4_o_appointment_preparation_files").(string)
+	bucketFiles :=  ctx.GetInput("4_o_appointment_preparation_files")
+
+	var linkBucketFiles string
+	if bucketFiles != nil{
+		linkBucketFiles = bucketFiles.(string)
+	}
+
 
 	var files []string
 
