@@ -553,6 +553,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
+		fmt.Println(len(files))
 		if len(files) > 0 {
 			log.Println("Attach preparation files...")
 
