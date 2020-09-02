@@ -444,13 +444,10 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	var files []string
 
-	fmt.Println(preparation)
-
 	if preparation != nil {
 
 		for i := 0; i < len(preparationArray); i++ {
 
-			log.Println("Get preparations...")
 
 			if cast.ToString(preparationArray[i][0]) == "" {
 				log.Println("build preparation files...")
@@ -718,12 +715,14 @@ func handleHour(number int) (formatted string) {
 
 func downloadFile(filepath string, url string) bool {
 	// Get the data
+	success := false
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
 	}
 	defer resp.Body.Close()
 
+	fmt.Println(cast.ToString(resp.Body) != "")
 	if cast.ToString(resp.Body) != "" {
 		// Create the file
 		out, err := os.Create(filepath)
@@ -734,8 +733,8 @@ func downloadFile(filepath string, url string) bool {
 
 		// Write the body to file
 		_, err = io.Copy(out, resp.Body)
-		return true
+		success = true
 	}
 
-	return false
+	return success
 }
