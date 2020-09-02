@@ -437,10 +437,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	for i := 0; i < len(preparationArray); i++ {
 
 		if cast.ToString(preparationArray[i][0]) == "" {
-			files = append(files, cast.ToString(preparationArray[i][4]) + ".pdf")
 			err := downloadFile(cast.ToString(preparationArray[i][4]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
-			if err != nil {
-				panic(err)
+			if err {
+				files = append(files, cast.ToString(preparationArray[i][4]) + ".pdf")
 			}
 		} else {
 
@@ -543,6 +542,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		for k := 0; k< len(files); k++ {
 			sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
+
 
 			rawFile, fileErr := ioutil.ReadFile(files[k])
 			if fileErr != nil {
@@ -686,11 +686,11 @@ func handleHour(number int) (formatted string) {
 	return formatted
 }
 
-func downloadFile(filepath string, url string) error {
+func downloadFile(filepath string, url string) bool {
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 	defer resp.Body.Close()
 
@@ -702,14 +702,14 @@ func downloadFile(filepath string, url string) error {
 		// Create the file
 		out, err := os.Create(filepath)
 		if err != nil {
-			return err
+			fmt.Println(err)
 		}
 		defer out.Close()
 
 		// Write the body to file
 		_, err = io.Copy(out, resp.Body)
-		return err
+		return true
 	}
 
-	return nil
+	return false
 }
