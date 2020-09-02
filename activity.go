@@ -345,12 +345,16 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	loc, err := time.LoadLocation("Europe/Lisbon")
 	layout := "2006-01-02T15:04:05.000-0700"
-	fmt.Println(err)
+	if err != nil{
+		fmt.Println(err)
+	}
 	startDate, errd := time.Parse(layout, date)
 
 	fEndDate, errd := time.Parse(layout, endDate)
 
-	fmt.Println(errd)
+	if errd != nil{
+		fmt.Println(errd)
+	}
 
 	content := "BEGIN:VCALENDAR\r" +
 		"METHOD:" + method + "\r" +
@@ -393,8 +397,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	filename1 := CreateTempFile(content)
 
-	//create email
-
 	var (
 		serverAddr         = server
 		portNumber         = port
@@ -405,6 +407,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	)
 
 	from := fromName + " <" + emailFrom + ">"
+
+	log.Println("Init create sample msg...")
 
 	sampleMsg := fmt.Sprintf("From: %s\r\n", from)
 	sampleMsg += fmt.Sprintf("To: %s\r\n", tos)
@@ -436,12 +440,16 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	for i := 0; i < len(preparationArray); i++ {
 
+		log.Println("Get preparations...")
+
 		if cast.ToString(preparationArray[i][0]) == "" {
+			log.Println("build preparation files...")
 			err := downloadFile(cast.ToString(preparationArray[i][4]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 			if err {
 				files = append(files, cast.ToString(preparationArray[i][4]) + ".pdf")
 			}
 		} else {
+			log.Println("build preparation...")
 
 			if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
 				data.PrepTitle = cast.ToString(preparationArray[i][0])
@@ -465,10 +473,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	}
 
 	isPreparation := false
-	fmt.Println(data.PrepTitle)
-	fmt.Println(data.DescExam)
-	fmt.Println(data.Info)
-	fmt.Println(data.DescPrep)
 	if data.PrepTitle != "" && data.DescExam != "" && data.Info != "" && data.DescPrep != "" {
 		isPreparation = true
 	}
@@ -496,6 +500,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	preparationText := ""
 
 	if (len(preparationArray) > 0 || preparation != nil) && (data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "") {
+		log.Println("Build preparation template...")
 		if data.DescPrep != "" {
 			prepRequest := NewRequest([]string{""}, subject, "")
 			errorPrep := prepRequest.ParseTemplate(templatePreparation+".html", data)
@@ -507,14 +512,18 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		}
 	}
 
+	log.Println("Build Footer...")
 	footer := ""
 	fo := NewRequest([]string{contact}, subject, "")
 	errory := fo.ParseTemplate(template+"-footer.html", templateData)
-	fmt.Println(errory)
+	if errory != nil {
+		fmt.Println(errory)
+	}
 	if errory := fo.ParseTemplate(template+"-footer.html", templateData); errory == nil {
 		footer = fo.body
 	}
 
+	log.Println("Build content...")
 	r := NewRequest([]string{contact}, subject, "")
 	error1 := r.ParseTemplate(template+".html", templateData)
 	if error1 := r.ParseTemplate(template+".html", templateData); error1 == nil {
@@ -522,18 +531,20 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		sampleMsg += preparationText
 		sampleMsg += footer
 
+		log.Println("Attach ics...")
 		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 		sampleMsg += "Content-Type: text/calendar; charset=\"utf-8\"\r\n"
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 		sampleMsg += "Content-Disposition: attachment;filename=\"" + filename + "\"\r\n"
 
 		rawFile, fileErr := ioutil.ReadFile(attachmentFilePath)
-		fmt.Println(rawFile)
 		if fileErr != nil {
 			log.Panic(fileErr)
 		}
 
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
+
+		log.Println("Attach preparation files...")
 
 		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 		sampleMsg += "Content-Type: application/pdf; charset=\"utf-8\"\r\n"
@@ -567,6 +578,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		}
 
 		if ssl != "true" {
+			log.Println("Send email...")
 			auth := smtp.PlainAuth("", emailAuth, password, serverAddr)
 			err := smtp.SendMail(serverAddr+":"+portNumber, auth, emailFrom, to, []byte(sampleMsg))
 			if err != nil {
@@ -579,6 +591,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 				success = true
 			}
 		} else {
+			log.Println("Send email...")
 			err := smtp.SendMail(serverAddr+":"+portNumber, nil, emailFrom, to, []byte(sampleMsg))
 			if err != nil {
 				fmt.Println(err)
@@ -596,12 +609,16 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		defer os.Remove(filename)
 
 	}
-	fmt.Println(error1)
+	if error1 != nil{
+		fmt.Println(error1)
+	}
 
 	return email, success
 }
 
 func CreateTempFile(serializer string) string {
+
+	log.Println("Create ics...")
 
 	tmpFile, err := ioutil.TempFile(os.TempDir(), "*.ics")
 	if err != nil {
@@ -693,10 +710,6 @@ func downloadFile(filepath string, url string) bool {
 		log.Println(err)
 	}
 	defer resp.Body.Close()
-
-	fmt.Println("body")
-	fmt.Println(resp.Body)
-	fmt.Println(cast.ToString(resp.Body))
 
 	if cast.ToString(resp.Body) != ""{
 		// Create the file
