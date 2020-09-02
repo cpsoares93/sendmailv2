@@ -533,11 +533,15 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 		sampleMsg += "Content-Disposition: attachment;filename=\"" + filename + "\"\r\n"
 
+		sampleMsg += "Content-Type: text/plain; charset=\"utf-8\"\r\n"
+		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
+
 		for k := 0; k< len(files); k++ {
 			sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
 		}
 
 		rawFile, fileErr := ioutil.ReadFile(attachmentFilePath)
+		fmt.Println(rawFile)
 		if fileErr != nil {
 			log.Panic(fileErr)
 		}
@@ -687,8 +691,6 @@ func handleHour(number int) (formatted string) {
 }
 
 func downloadFile(filepath string, url string) error {
-	fmt.Println(filepath)
-	fmt.Println(url)
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
