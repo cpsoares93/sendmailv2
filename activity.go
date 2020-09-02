@@ -720,10 +720,11 @@ func downloadFile(filepath string, url string) bool {
 	if err != nil {
 		log.Println(err)
 	}
-	defer resp.Body.Close()
 
 
 	if resp.StatusCode == 200 {
+		defer resp.Body.Close()
+
 		// Create the file
 		out, err := os.Create(filepath)
 		if err != nil {
