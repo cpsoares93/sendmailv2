@@ -533,7 +533,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 		sampleMsg += "Content-Disposition: attachment;filename=\"" + filename + "\"\r\n"
 
-		sampleMsg += "Content-Type: text/plain; charset=\"utf-8\"\r\n"
+		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
+		sampleMsg += "Content-Type: application/pdf; charset=\"utf-8\"\r\n"
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 
 		for k := 0; k< len(files); k++ {
