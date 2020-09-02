@@ -444,6 +444,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	var files []string
 
+	fmt.Println(preparation)
+
 	if preparation != nil {
 
 		for i := 0; i < len(preparationArray); i++ {
@@ -453,6 +455,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			if cast.ToString(preparationArray[i][0]) == "" {
 				log.Println("build preparation files...")
 				err := downloadFile(cast.ToString(preparationArray[i][4])+".pdf", linkBucketFiles+cast.ToString(preparationArray[i][3])+".pdf")
+				fmt.Println(err)
 				if err {
 					files = append(files, cast.ToString(preparationArray[i][4])+".pdf")
 				}
