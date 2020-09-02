@@ -418,31 +418,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	startDate = startDate.In(loc)
 	fEndDate = fEndDate.In(loc)
 
-	isPreparation := false
-	if len(preparationArray) > 0 {
-		isPreparation = true
-	}
-
-	templateData := struct {
-		Name          string
-		Appointment   string
-		Practitioner  string
-		Date          string
-		Hour          string
-		Meet          string
-		Hospital      string
-		IsPreparation bool
-	}{
-		Name:          patient,
-		Appointment:   appointment,
-		Practitioner:  practitioner,
-		Date:          strconv.Itoa(startDate.Day()) + "/" + strconv.Itoa(int(startDate.Month())),
-		Hour:          handleHour(startDate.Hour()) + ":" + handleHour(startDate.Minute()),
-		Meet:          meet,
-		Hospital:      clinic,
-		IsPreparation: isPreparation,
-	}
-
 	data := struct {
 		PrepTitle string
 		DescExam  string
@@ -456,7 +431,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	}
 
 	linkBucketFiles := ctx.GetInput("4_o_appointment_preparation_files").(string)
-
 
 	var files []string
 
@@ -491,9 +465,34 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		}
 	}
 
+	isPreparation := false
+	if data.PrepTitle == "" && data.DescExam == "" && data.Info == "" && data.DescPrep == "" {
+		isPreparation = true
+	}
+
+	templateData := struct {
+		Name          string
+		Appointment   string
+		Practitioner  string
+		Date          string
+		Hour          string
+		Meet          string
+		Hospital      string
+		IsPreparation bool
+	}{
+		Name:          patient,
+		Appointment:   appointment,
+		Practitioner:  practitioner,
+		Date:          strconv.Itoa(startDate.Day()) + "/" + strconv.Itoa(int(startDate.Month())),
+		Hour:          handleHour(startDate.Hour()) + ":" + handleHour(startDate.Minute()),
+		Meet:          meet,
+		Hospital:      clinic,
+		IsPreparation: isPreparation,
+	}
+
 	preparationText := ""
 
-	if len(preparationArray) > 0 || preparation != nil {
+	if (len(preparationArray) > 0 || preparation != nil) && (data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "") {
 		if data.DescPrep != "" {
 			prepRequest := NewRequest([]string{""}, subject, "")
 			errorPrep := prepRequest.ParseTemplate(templatePreparation+".html", data)
@@ -503,7 +502,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 				fmt.Println(prepRequest.body)
 			}
 		}
-
 	}
 
 	footer := ""
@@ -534,7 +532,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-		//sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
+		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
 		sampleMsg += "Content-Type: application/pdf; charset=\"utf-8\"\r\n"
 		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 
