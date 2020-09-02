@@ -698,14 +698,18 @@ func downloadFile(filepath string, url string) error {
 	fmt.Println(resp.Body)
 	fmt.Println(cast.ToString(resp.Body))
 
-	// Create the file
-	out, err := os.Create(filepath)
-	if err != nil {
+	if cast.ToString(resp.Body) != ""{
+		// Create the file
+		out, err := os.Create(filepath)
+		if err != nil {
+			return err
+		}
+		defer out.Close()
+
+		// Write the body to file
+		_, err = io.Copy(out, resp.Body)
 		return err
 	}
-	defer out.Close()
 
-	// Write the body to file
-	_, err = io.Copy(out, resp.Body)
-	return err
+	return nil
 }
