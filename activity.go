@@ -345,14 +345,14 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	loc, err := time.LoadLocation("Europe/Lisbon")
 	layout := "2006-01-02T15:04:05.000-0700"
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 	startDate, errd := time.Parse(layout, date)
 
 	fEndDate, errd := time.Parse(layout, endDate)
 
-	if errd != nil{
+	if errd != nil {
 		fmt.Println(errd)
 	}
 
@@ -438,36 +438,39 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	var files []string
 
-	for i := 0; i < len(preparationArray); i++ {
+	if preparation != nil {
 
-		log.Println("Get preparations...")
+		for i := 0; i < len(preparationArray); i++ {
 
-		if cast.ToString(preparationArray[i][0]) == "" {
-			log.Println("build preparation files...")
-			err := downloadFile(cast.ToString(preparationArray[i][4]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
-			if err {
-				files = append(files, cast.ToString(preparationArray[i][4]) + ".pdf")
-			}
-		} else {
-			log.Println("build preparation...")
+			log.Println("Get preparations...")
 
-			if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
-				data.PrepTitle = cast.ToString(preparationArray[i][0])
-			} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
-				if data.DescPrep != "" {
-					data.DescPrep += "\n"
+			if cast.ToString(preparationArray[i][0]) == "" {
+				log.Println("build preparation files...")
+				err := downloadFile(cast.ToString(preparationArray[i][4])+".pdf", linkBucketFiles+cast.ToString(preparationArray[i][3])+".pdf")
+				if err {
+					files = append(files, cast.ToString(preparationArray[i][4])+".pdf")
 				}
-				data.DescPrep += cast.ToString(preparationArray[i][0])
-			} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
-				if data.Info != "" {
-					data.Info += "\n"
+			} else {
+				log.Println("build preparation...")
+
+				if cast.ToString(preparationArray[i][2]) == "TITULO_PREPARACAO" {
+					data.PrepTitle = cast.ToString(preparationArray[i][0])
+				} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_PREPARACAO" {
+					if data.DescPrep != "" {
+						data.DescPrep += "\n"
+					}
+					data.DescPrep += cast.ToString(preparationArray[i][0])
+				} else if cast.ToString(preparationArray[i][2]) == "INFORMACAO_ADICIONAL" {
+					if data.Info != "" {
+						data.Info += "\n"
+					}
+					data.Info += cast.ToString(preparationArray[i][0])
+				} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
+					if data.DescExam != "" {
+						data.DescExam += "\n"
+					}
+					data.DescExam += cast.ToString(preparationArray[i][0])
 				}
-				data.Info += cast.ToString(preparationArray[i][0])
-			} else if cast.ToString(preparationArray[i][2]) == "DESCRICAO_EXAME" {
-				if data.DescExam != "" {
-					data.DescExam += "\n"
-				}
-				data.DescExam += cast.ToString(preparationArray[i][0])
 			}
 		}
 	}
@@ -544,26 +547,26 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-		log.Println("Attach preparation files...")
+		if preparation != nil {
+			log.Println("Attach preparation files...")
 
-		sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
-		sampleMsg += "Content-Type: application/pdf; charset=\"utf-8\"\r\n"
-		sampleMsg += "Content-Transfer-Encoding: base64\r\n"
+			sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
+			sampleMsg += "Content-Type: application/pdf; charset=\"utf-8\"\r\n"
+			sampleMsg += "Content-Transfer-Encoding: base64\r\n"
 
+			for k := 0; k < len(files); k++ {
+				sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
 
-		for k := 0; k< len(files); k++ {
-			sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
+				rawFile, fileErr := ioutil.ReadFile(files[k])
+				if fileErr != nil {
+					log.Panic(fileErr)
+				}
+				sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-
-			rawFile, fileErr := ioutil.ReadFile(files[k])
-			if fileErr != nil {
-				log.Panic(fileErr)
-			}
-			sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
-
-			err1 := os.Remove(files[k])  // remove a single file
-			if err1 != nil {
-				fmt.Println(err1)
+				err1 := os.Remove(files[k]) // remove a single file
+				if err1 != nil {
+					fmt.Println(err1)
+				}
 			}
 		}
 
@@ -609,7 +612,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		defer os.Remove(filename)
 
 	}
-	if error1 != nil{
+	if error1 != nil {
 		fmt.Println(error1)
 	}
 
@@ -711,7 +714,7 @@ func downloadFile(filepath string, url string) bool {
 	}
 	defer resp.Body.Close()
 
-	if cast.ToString(resp.Body) != ""{
+	if cast.ToString(resp.Body) != "" {
 		// Create the file
 		out, err := os.Create(filepath)
 		if err != nil {
