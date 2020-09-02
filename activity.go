@@ -722,8 +722,8 @@ func downloadFile(filepath string, url string) bool {
 	}
 	defer resp.Body.Close()
 
-	fmt.Println(cast.ToString(resp.Body) != "")
-	if cast.ToString(resp.Body) != "" {
+
+	if resp.StatusCode == 200 {
 		// Create the file
 		out, err := os.Create(filepath)
 		if err != nil {
