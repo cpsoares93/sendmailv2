@@ -541,12 +541,12 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		for k := 0; k< len(files); k++ {
 			sampleMsg += "Content-Disposition: attachment;filename=\"" + files[k] + "\"\r\n"
-
-			rawFile, fileErr := ioutil.ReadFile(files[k])
-			if fileErr != nil {
-				log.Panic(fileErr)
-			}
-			sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
+			//
+			//rawFile, fileErr := ioutil.ReadFile(files[k])
+			//if fileErr != nil {
+			//	log.Panic(fileErr)
+			//}
+			//sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
 			err1 := os.Remove(files[k])  // remove a single file
 			if err1 != nil {
