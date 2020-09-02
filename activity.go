@@ -694,6 +694,9 @@ func downloadFile(filepath string, url string) error {
 	}
 	defer resp.Body.Close()
 
+	fmt.Println("body")
+	fmt.Println(resp.Body)
+
 	// Create the file
 	out, err := os.Create(filepath)
 	if err != nil {
