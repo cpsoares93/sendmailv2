@@ -437,8 +437,8 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	for i := 0; i < len(preparationArray); i++ {
 
 		if cast.ToString(preparationArray[i][0]) == "" {
-			files = append(files, cast.ToString(preparationArray[i][3]) + ".pdf")
-			err := downloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
+			files = append(files, cast.ToString(preparationArray[i][4]) + ".pdf")
+			err := downloadFile(cast.ToString(preparationArray[i][4]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 			if err != nil {
 				panic(err)
 			}
@@ -471,7 +471,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	fmt.Println(data.Info)
 	fmt.Println(data.DescPrep)
 	if data.PrepTitle != "" && data.DescExam != "" && data.Info != "" && data.DescPrep != "" {
-		fmt.Println("teste")
 		isPreparation = true
 	}
 
