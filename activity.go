@@ -285,11 +285,13 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	server := ctx.GetInput("1_b_smtp_server").(string)
 	port := ctx.GetInput("1_c_smtp_port").(string)
 	emailAuth := ctx.GetInput("1_e_smtp_auth_email").(string)
-	fromName := ctx.GetInput("1_h_smtp_from_email").(string)
 	ssl := ctx.GetInput("1_d_smtp_ssl").(string)
 	bcc := ctx.GetInput("1_i_smtp_bcc_email").(string)
 	password := ""
 	emailFrom := emailAuth
+
+	fromName := ctx.GetInput("1_g_smtp_sender_name").(string)
+
 
 	if ssl != "true" {
 		password = ctx.GetInput("1_f_smtp_auth_password").(string)
