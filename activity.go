@@ -463,9 +463,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	for i := 0; i < len(preparationArray); i++ {
 
 		if cast.ToString(preparationArray[i][0]) == "" {
-			fmt.Println("cenas")
-			fmt.Println(linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
-
 			files = append(files, cast.ToString(preparationArray[i][3]) + ".pdf")
 			err := downloadFile(cast.ToString(preparationArray[i][3]) + ".pdf", linkBucketFiles + cast.ToString(preparationArray[i][3]) + ".pdf")
 			if err != nil {
@@ -494,11 +491,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		}
 	}
 
-	fmt.Println(files)
-
 	preparationText := ""
-
-	fmt.Println(len(preparationArray))
 
 	if len(preparationArray) > 0 || preparation != nil {
 		if data.DescPrep != "" {
@@ -555,10 +548,10 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 			}
 			sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-			//err1 := os.Remove(files[k])  // remove a single file
-			//if err1 != nil {
-			//	fmt.Println(err1)
-			//}
+			err1 := os.Remove(files[k])  // remove a single file
+			if err1 != nil {
+				fmt.Println(err1)
+			}
 		}
 
 		log.Println("Write content into client writter I/O")
