@@ -466,7 +466,12 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	}
 
 	isPreparation := false
+	fmt.Println(data.PrepTitle)
+	fmt.Println(data.DescExam)
+	fmt.Println(data.Info)
+	fmt.Println(data.DescPrep)
 	if data.PrepTitle == "" && data.DescExam == "" && data.Info == "" && data.DescPrep == "" {
+		fmt.Println("teste")
 		isPreparation = true
 	}
 
