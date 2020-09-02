@@ -482,7 +482,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	}
 
 	isPreparation := false
-	if data.PrepTitle != "" && data.DescExam != "" && data.Info != "" && data.DescPrep != "" {
+	if data.PrepTitle != "" || data.DescExam != "" || data.Info != "" || data.DescPrep != "" {
 		isPreparation = true
 	}
 
@@ -553,7 +553,7 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 		sampleMsg += "\r\n" + base64.StdEncoding.EncodeToString(rawFile)
 
-		if preparation != nil {
+		if len(files) > 0 {
 			log.Println("Attach preparation files...")
 
 			sampleMsg += fmt.Sprintf("\r\n--%s\r\n", delimeter)
