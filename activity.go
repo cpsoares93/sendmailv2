@@ -696,6 +696,7 @@ func downloadFile(filepath string, url string) error {
 
 	fmt.Println("body")
 	fmt.Println(resp.Body)
+	fmt.Println(cast.ToString(resp.Body))
 
 	// Create the file
 	out, err := os.Create(filepath)
