@@ -225,51 +225,56 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 		Date:          expirationDate,
 	}
 
-	footer := ""
-	fo := NewRequest([]string{contact}, subject, "")
-	errory := fo.ParseTemplate(footerTemplate+".html", templateData)
-	fmt.Println(errory)
-	if errory := fo.ParseTemplate(footerTemplate+".html", templateData); errory == nil {
-		footer = fo.body
-	}
+	if len(prescriptionContent) > 0 {
 
-	r := NewRequest([]string{contact}, subject, "")
-	error1 := r.ParseTemplate(contentTemplate+".html", templateData)
-	fmt.Println(error1)
-	if error1 := r.ParseTemplate(contentTemplate+".html", templateData); error1 == nil {
-
-		sampleMsg += r.body
-		sampleMsg += tableDrugs
-		sampleMsg += footer
-
-		if ssl != "true" {
-			auth := smtp.PlainAuth("", emailAuth, password, server)
-			err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
-			if err != nil {
-				fmt.Println(err)
-				handleError(endpoint, prescriptionIdBd)
-				email = ""
-				success = false
-			} else {
-				output = sampleMsg
-				success = true
-
-			}
-		} else {
-			err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
-			if err != nil {
-				fmt.Println(err)
-				handleError(endpoint, prescriptionIdBd)
-				email = ""
-				success = false
-			} else {
-				output = sampleMsg
-				success = true
-			}
+		footer := ""
+		fo := NewRequest([]string{contact}, subject, "")
+		errory := fo.ParseTemplate(footerTemplate+".html", templateData)
+		fmt.Println(errory)
+		if errory := fo.ParseTemplate(footerTemplate+".html", templateData); errory == nil {
+			footer = fo.body
 		}
-		log.Print("done.")
-	}
 
+		r := NewRequest([]string{contact}, subject, "")
+		error1 := r.ParseTemplate(contentTemplate+".html", templateData)
+		fmt.Println(error1)
+		if error1 := r.ParseTemplate(contentTemplate+".html", templateData); error1 == nil {
+
+			sampleMsg += r.body
+			sampleMsg += tableDrugs
+			sampleMsg += footer
+
+			if ssl != "true" {
+				auth := smtp.PlainAuth("", emailAuth, password, server)
+				err := smtp.SendMail(server+":"+port, auth, emailFrom, to, []byte(sampleMsg))
+				if err != nil {
+					fmt.Println(err)
+					handleError(endpoint, prescriptionIdBd)
+					email = ""
+					success = false
+				} else {
+					output = sampleMsg
+					success = true
+
+				}
+			} else {
+				err := smtp.SendMail(server+":"+port, nil, emailFrom, to, []byte(sampleMsg))
+				if err != nil {
+					fmt.Println(err)
+					handleError(endpoint, prescriptionIdBd)
+					email = ""
+					success = false
+				} else {
+					output = sampleMsg
+					success = true
+				}
+			}
+			log.Print("done.")
+		}
+	} else {
+		output = ""
+		success = false
+	}
 	return output, success
 }
 
@@ -291,7 +296,6 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 	emailFrom := emailAuth
 
 	fromName := ctx.GetInput("1_g_smtp_sender_name").(string)
-
 
 	if ssl != "true" {
 		password = ctx.GetInput("1_f_smtp_auth_password").(string)
@@ -436,20 +440,18 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		Info:      "",
 	}
 
-	bucketFiles :=  ctx.GetInput("4_o_appointment_preparation_files")
+	bucketFiles := ctx.GetInput("4_o_appointment_preparation_files")
 
 	var linkBucketFiles string
-	if bucketFiles != nil{
+	if bucketFiles != nil {
 		linkBucketFiles = bucketFiles.(string)
 	}
-
 
 	var files []string
 
 	if preparation != nil {
 
 		for i := 0; i < len(preparationArray); i++ {
-
 
 			if cast.ToString(preparationArray[i][0]) == "" {
 				log.Println("build preparation files...")
@@ -722,7 +724,6 @@ func downloadFile(filepath string, url string) bool {
 	if err != nil {
 		log.Println(err)
 	}
-
 
 	if resp.StatusCode == 200 {
 		defer resp.Body.Close()
