@@ -514,6 +514,9 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 
 	preparationText := ""
 
+	fmt.Println(len(preparationArray) > 0 || preparation != nil)
+	fmt.Println(data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "")
+
 	if (len(preparationArray) > 0 || preparation != nil) && (data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "") {
 		log.Println("Build preparation template...")
 		if data.DescPrep != "" {
