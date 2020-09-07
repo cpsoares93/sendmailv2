@@ -510,16 +510,11 @@ func createAppointment(ctx activity.Context) (email string, success bool) {
 		IsPreparation: isPreparation,
 	}
 
-	fmt.Println(data)
-
 	preparationText := ""
-
-	fmt.Println(len(preparationArray) > 0 || preparation != nil)
-	fmt.Println(data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "")
 
 	if (len(preparationArray) > 0 || preparation != nil) && (data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "") {
 		log.Println("Build preparation template...")
-		if data.DescPrep != "" {
+		if data.PrepTitle != "" || data.DescPrep != "" || data.Info != "" || data.DescExam != "" {
 			prepRequest := NewRequest([]string{""}, subject, "")
 			errorPrep := prepRequest.ParseTemplate(templatePreparation+".html", data)
 			fmt.Println(errorPrep)
