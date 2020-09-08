@@ -133,10 +133,9 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 		fmt.Println(input)
 		if !contains(input, prescId.(string)) {
 			for i := 0; i < len(prescriptionContent); i++ {
-				requestId := prescriptionContent[i][0]
-				requestId = *prescId.(*string)
+				requestId := cast.ToString(prescriptionContent[i][0])
 
-				if prescId.(string) == requestId.(string) {
+				if prescId.(string) == requestId {
 
 					data.Name = convertToString(prescriptionContent[i][1])
 
