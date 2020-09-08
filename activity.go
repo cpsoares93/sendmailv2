@@ -186,7 +186,9 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 			}
 			res := append(input, prescId.(string))
 			fmt.Println(res)
+			fmt.Println(input)
 		} else {
+			fmt.Println("entrou")
 			if data.Name != "" && data.Dosagedrug != "" && data.Dosage != "" && data.Pharmform != "" &&
 				data.Package != "" && data.Quantity != "" && data.Lowest != "" && data.Expiration != "" &&
 				data.Instruction != "" {
