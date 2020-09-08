@@ -184,8 +184,7 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 				//	}
 				//}
 			}
-			res := append(input, prescId.(string))
-			fmt.Println(res)
+			input = append(input, prescId.(string))
 			fmt.Println(input)
 		} else {
 			fmt.Println("entrou")
