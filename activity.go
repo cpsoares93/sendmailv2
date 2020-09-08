@@ -131,6 +131,8 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 		prescId = *prescId.(*string)
 
 		fmt.Println(input)
+		fmt.Println(prescId.(string))
+
 		if !contains(input, prescId.(string)) {
 			for i := 0; i < len(prescriptionContent); i++ {
 				requestId := cast.ToString(prescriptionContent[i][0])
@@ -187,8 +189,9 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 			input = append(input, prescId.(string))
 			fmt.Println(input)
 		} else {
-			if data.Name != "" && data.Dosagedrug != "" && data.Dosage != "" && data.Pharmform != "" &&
-				data.Package != "" && data.Quantity != "" && data.Lowest != "" && data.Expiration != "" &&
+			print("já criado")
+			if data.Name != "" || data.Dosagedrug != "" || data.Dosage != "" || data.Pharmform != "" ||
+				data.Package != "" || data.Quantity != "" || data.Lowest != "" || data.Expiration != "" ||
 				data.Instruction != "" {
 				prescRequest := NewRequest([]string{""}, "Prescription", "")
 				errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data)
