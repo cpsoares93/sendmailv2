@@ -60,6 +60,16 @@ func (a *sendmail) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
+func contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[item]
+	return ok
+}
+
 func createPrescription(ctx activity.Context) (email string, success bool) {
 	output := ""
 
@@ -87,7 +97,6 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 
 	tableDrugs := ""
 
-	requestId := ""
 	index := 1
 
 	data := struct {
@@ -114,22 +123,81 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 		Instruction: "",
 	}
 
-	for i := 0; i < len(prescriptionContent); i++ {
-		prescId := prescriptionContent[i][0]
+
+	var input []string
+
+	for j := 0; j < len(prescriptionContent); j++ {
+		prescId := prescriptionContent[j][0]
 		prescId = *prescId.(*string)
 
-		if prescId.(string) != requestId {
+		fmt.Println(input)
+		if !contains(input, prescId.(string)) {
+			for i := 0; i < len(prescriptionContent); i++ {
+				requestId := prescriptionContent[i][0]
+				requestId = *prescId.(*string)
 
-			prescRequest := NewRequest([]string{""}, "Prescription", "")
+				if prescId.(string) == requestId {
 
-			if requestId != "" {
+					data.Name = convertToString(prescriptionContent[i][1])
+
+					data.Dosage = convertToString(prescriptionContent[i][2])
+
+					data.Quantity = convertToString(prescriptionContent[i][5])
+
+					data.Lowest = convertToString(prescriptionContent[i][6])
+
+					data.Expiration = convertToString(prescriptionContent[i][7])
+
+					data.Instruction = convertToString(prescriptionContent[i][8])
+
+					if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
+						data.Pharmform = convertToString(prescriptionContent[i][4])
+
+					} else if convertToString(prescriptionContent[i][3]) == "embalagem" {
+						data.Package = convertToString(prescriptionContent[i][4])
+
+					} else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem" {
+						data.Dosagedrug = convertToString(prescriptionContent[i][4])
+					}
+
+					//requestId = prescId.(string)
+					//index = index + 1
+				}
+				//else {
+				//	if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
+				//		data.Pharmform = convertToString(prescriptionContent[i][4])
+				//
+				//	} else if convertToString(prescriptionContent[i][3]) == "embalagem" {
+				//		data.Package = convertToString(prescriptionContent[i][4])
+				//
+				//	} else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem" {
+				//		data.Dosagedrug = convertToString(prescriptionContent[i][4])
+				//	}
+				//}
+
+				//if i == len(prescriptionContent)-1 {
+				//	prescRequest := NewRequest([]string{""}, subject, "")
+				//	errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data)
+				//	fmt.Println(errorPresc)
+				//	if errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data); errorPresc == nil {
+				//		tableDrugs += prescRequest.body
+				//		fmt.Println(prescRequest.body)
+				//	}
+				//}
+			}
+			res := append(input, prescId.(string))
+			fmt.Println(res)
+		} else {
+			if data.Name != "" && data.Dosagedrug != "" && data.Dosage != "" && data.Pharmform != "" &&
+				data.Package != "" && data.Quantity != "" && data.Lowest != "" && data.Expiration != "" &&
+				data.Instruction != "" {
+				prescRequest := NewRequest([]string{""}, "Prescription", "")
 				errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data)
 				fmt.Println(errorPresc)
 				if errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data); errorPresc == nil {
 					tableDrugs += prescRequest.body
 					fmt.Println(prescRequest.body)
 				}
-
 				data.Name = ""
 				data.Dosagedrug = ""
 				data.Index = strconv.Itoa(index)
@@ -142,50 +210,6 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 				data.Instruction = ""
 			}
 
-			data.Name = convertToString(prescriptionContent[i][1])
-
-			data.Dosage = convertToString(prescriptionContent[i][2])
-
-			data.Quantity = convertToString(prescriptionContent[i][5])
-
-			data.Lowest = convertToString(prescriptionContent[i][6])
-
-			data.Expiration = convertToString(prescriptionContent[i][7])
-
-			data.Instruction = convertToString(prescriptionContent[i][8])
-
-			if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
-				data.Pharmform = convertToString(prescriptionContent[i][4])
-
-			} else if convertToString(prescriptionContent[i][3]) == "embalagem" {
-				data.Package = convertToString(prescriptionContent[i][4])
-
-			} else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem" {
-				data.Dosagedrug = convertToString(prescriptionContent[i][4])
-			}
-
-			requestId = prescId.(string)
-			index = index + 1
-		} else {
-			if convertToString(prescriptionContent[i][3]) == "forma_farmaceutica" {
-				data.Pharmform = convertToString(prescriptionContent[i][4])
-
-			} else if convertToString(prescriptionContent[i][3]) == "embalagem" {
-				data.Package = convertToString(prescriptionContent[i][4])
-
-			} else if convertToString(prescriptionContent[i][3]) == "qtd_embalagem" {
-				data.Dosagedrug = convertToString(prescriptionContent[i][4])
-			}
-		}
-
-		if i == len(prescriptionContent)-1 {
-			prescRequest := NewRequest([]string{""}, subject, "")
-			errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data)
-			fmt.Println(errorPresc)
-			if errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data); errorPresc == nil {
-				tableDrugs += prescRequest.body
-				fmt.Println(prescRequest.body)
-			}
 		}
 	}
 
