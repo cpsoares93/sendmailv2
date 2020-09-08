@@ -214,25 +214,6 @@ func createPrescription(ctx activity.Context) (email string, success bool) {
 
 		}
 
-		if len(prescriptionContent) - 1 == j {
-			prescRequest := NewRequest([]string{""}, "Prescription", "")
-			errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data)
-			fmt.Println(errorPresc)
-			if errorPresc := prescRequest.ParseTemplate(iterateTemplate+".html", data); errorPresc == nil {
-				tableDrugs += prescRequest.body
-				fmt.Println(prescRequest.body)
-			}
-			data.Name = ""
-			data.Dosagedrug = ""
-			data.Index = strconv.Itoa(index)
-			data.Dosage = ""
-			data.Pharmform = ""
-			data.Package = ""
-			data.Quantity = ""
-			data.Lowest = ""
-			data.Expiration = ""
-			data.Instruction = ""
-		}
 	}
 
 	dispensationPin := ctx.GetInput("5_c_prescription_dispensation_pin").(string)
